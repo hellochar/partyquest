@@ -4,6 +4,8 @@ require [
   'phaser'
 ], ($, io, Phaser) ->
 
+  $("#overlay").fadeOut(0)
+
   socket = io.connect('/game')
 
   deaths = 0
@@ -34,8 +36,11 @@ require [
 
   hitSpike = (player, spike) ->
     player.kill()
-    player.reset(32, 32)
     deaths += 1
+    $("#overlay").fadeIn(1000, () -> 
+      player.reset(32, 32)
+      $("#overlay").fadeOut(1000)
+    )
 
   preload = ->
     game.load.image('sky', 'images/sky.png')
@@ -56,8 +61,6 @@ require [
     game.antialias = false
 
     ratio = window.innerWidth / 2000
-
-    game.camera.scale.setTo ratio, ratio
 
     game.world.setBounds(0, 0, 1500, 1900)
 
