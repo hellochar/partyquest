@@ -37,6 +37,10 @@ html, body, .spans {
   width: 40vmin;
 }
 
+/* .spans .arrow:active { */
+/*   color: orange; */
+/* } */
+/*  */
 .spans .left {
   right: initial;
 }
