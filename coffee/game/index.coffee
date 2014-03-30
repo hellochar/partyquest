@@ -11,18 +11,31 @@ require [
   deaths = 0
   timeStarted = Date.now()
 
+  fadeArrow = (angle) ->
+    {x: x, y: y} = player.body
+    arrow = game.add.sprite(x, y, "left-arrow")
+    arrow.angle = angle
+    arrow.anchor.set(0.5)
+    setTimeout(() ->
+      arrow.kill()
+    , 1000)
+
   moveLeft = () ->
     #  Move to the left
     player.body.velocity.x += -500
+    fadeArrow(0)
 
   moveRight = () ->
     player.body.velocity.x += 500
+    fadeArrow(180)
 
   moveUp = () ->
     player.body.velocity.y += -500
+    fadeArrow(90)
 
   moveDown = () ->
     player.body.velocity.y += 500
+    fadeArrow(-90)
 
   socket.on('left', moveLeft)
   socket.on('right', moveRight)
@@ -48,6 +61,7 @@ require [
     game.load.image('star', 'images/star.png')
     game.load.spritesheet('dude', 'images/dude.png', 32, 48)
     game.load.image('spike', 'images/spikes.png')
+    game.load.image('left-arrow', 'images/arrow.png')
 
   player = undefined
   platforms = undefined
