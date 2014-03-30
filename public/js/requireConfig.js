@@ -11,6 +11,7 @@ var require = {
         jquery: ['vendor/jquery-1.9.1.min', '//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min'],
         noise: ['vendor/noise'],
         pathfinding: ['vendor/PathFinding.js/lib/pathfinding-browser'],
+        phaser: ['vendor/phaser/phaser'],
         seedrandom: ['vendor/seedrandom'],
         'socket.io': ['/socket.io/socket.io'],
         stats: ['vendor/stats'],
@@ -33,6 +34,9 @@ var require = {
         },
         noise: {
             exports: 'ClassicalNoise'
+        },
+        phaser: {
+            exports: "Phaser"
         },
         settings: {
             exports: 'settings'
