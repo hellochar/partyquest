@@ -8,10 +8,10 @@ require [
 
   moveLeft = () ->
     #  Move to the left
-    player.body.velocity.x += -50
+    player.body.velocity.x += -500
 
   moveRight = () ->
-    player.body.velocity.x += 50
+    player.body.velocity.x += 500
 
   tryJump = () ->
     #  Allow the player to jump if they are touching the ground.
@@ -54,8 +54,8 @@ require [
     # Here we create the ground.
     ground = platforms.create(0, 600 - 64, "ground")
 
-    #  Scale it to fit the width of the game (the original sprite is 400x32 in size)
-    ground.scale.setTo 2, 2
+    # #  Scale it to fit the width of the game (the original sprite is 400x32 in size)
+    # ground.scale.setTo 2, 2
 
     #  This stops it from falling away when you jump on it
     ground.body.immovable = true
@@ -116,16 +116,16 @@ require [
     game.physics.arcade.collide(stars, platforms)
     game.physics.arcade.overlap(player, stars, collectStar, null, this)
 
-    player.body.velocity.x *= .9
+    player.body.velocity.x *= .8
 
-    if player.body.velocity < .01
-      player.body.velocity = 0
+    if Math.abs(player.body.velocity.x) < 10
+      player.body.velocity.x = 0
       player.animations.stop()
       player.frame = 4
-    else if player.body.velocity > 0
-      player.animations.play('left')
-    else if player.body.velocity < 0
+    else if player.body.velocity.x > 0
       player.animations.play('right')
+    else if player.body.velocity.x < 0
+      player.animations.play('left')
 
   game = new Phaser.Game(window.innerWidth, window.innerHeight, Phaser.AUTO, "viewport",
     preload: preload
