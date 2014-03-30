@@ -13,13 +13,16 @@ require [
   moveRight = () ->
     player.body.velocity.x += 500
 
-  tryJump = () ->
-    #  Allow the player to jump if they are touching the ground.
-    player.body.velocity.y += -500 if player.body.touching.down
+  moveUp = () ->
+    player.body.velocity.y += -500
+
+  moveDown = () ->
+    player.body.velocity.y += 500
 
   socket.on('left', moveLeft)
   socket.on('right', moveRight)
-  socket.on('up', tryJump)
+  socket.on('up', moveUp)
+  socket.on('down', moveDown)
 
 
   collectStar = (player, star) ->
@@ -34,16 +37,23 @@ require [
 
   player = undefined
   platforms = undefined
-  cursors = undefined
   stars = undefined
 
   create = ->
+
+    game.antialias = false
+
+    ratio = window.innerWidth / 1400
+
+    game.camera.scale.setTo ratio, ratio
+
+    game.world.setBounds(0, 0, 3000, 600)
 
     #  We're going to be using physics, so enable the Arcade Physics system
     game.physics.startSystem Phaser.Physics.ARCADE
 
     #  A simple background for our game
-    game.add.sprite 0, 0, "sky"
+    game.add.tileSprite 0, 0, 3000, 600, "sky"
 
     #  The platforms group contains the ground and the 2 ledges we can jump on
     platforms = game.add.group()
@@ -53,29 +63,32 @@ require [
 
     # Here we create the ground.
     ground = platforms.create(0, 600 - 64, "ground")
-
-    # #  Scale it to fit the width of the game (the original sprite is 400x32 in size)
-    # ground.scale.setTo 2, 2
+    ground.smoothed = false
 
     #  This stops it from falling away when you jump on it
     ground.body.immovable = true
 
-    #  Now let's create two ledges
-    ledge = platforms.create(400, 400, "ground")
-    ledge.body.immovable = true
-    ledge = platforms.create(-150, 250, "ground")
-    ledge.body.immovable = true
+    for i in [0...5]
+      #  Now let's create two ledges
+      ledge = platforms.create(800 * i, 400, "ground")
+      ledge.smoothed = false
+      ledge.body.immovable = true
+      ledge = platforms.create(-150 + 600 * i, 250, "ground")
+      ledge.smoothed = false
+      ledge.body.immovable = true
 
     # The player and its settings
     player = game.add.sprite(32, 600 - 150, "dude")
+    player.anchor.set(0.5)
+    player.smoothed = false
 
     #  We need to enable physics on the player
     game.physics.arcade.enable player
 
-    #  Player physics properties. Give the little guy a slight bounce.
-    player.body.bounce.y = 0.0
-    player.body.gravity.y = 600
     player.body.collideWorldBounds = true
+    player.body.gravity.y = 300
+
+    window.player = player
 
     #  Our two animations, walking left and right.
     player.animations.add "left", [
@@ -91,7 +104,7 @@ require [
       8
     ], 10, true
 
-    cursors = game.input.keyboard.createCursorKeys()
+    # game.camera.follow(player, Phaser.Camera.FOLLOW_PLATFORMER)
 
     stars = game.add.group()
     stars.enableBody = true
@@ -103,9 +116,7 @@ require [
 
       #  Create a star inside of the 'stars' group
       star = stars.create(i * 70, 0, "star")
-
-      #  Let gravity do its thing
-      star.body.gravity.y = 6
+      star.smoothed = false
 
       #  This just gives each star a slightly random bounce value
       star.body.bounce.y = 0.7 + Math.random() * 0.2
@@ -116,7 +127,10 @@ require [
     game.physics.arcade.collide(stars, platforms)
     game.physics.arcade.overlap(player, stars, collectStar, null, this)
 
-    player.body.velocity.x *= .8
+    game.camera.bounds = null
+    game.camera.focusOnXY(player.body.x * game.camera.scale.x, player.body.y * game.camera.scale.y)
+
+    player.body.velocity.setMagnitude(player.body.velocity.getMagnitude() * .8)
 
     if Math.abs(player.body.velocity.x) < 10
       player.body.velocity.x = 0
@@ -132,3 +146,4 @@ require [
     create: create
     update: update
   )
+  window.game = game
