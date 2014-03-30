@@ -7,7 +7,6 @@ var express = require('express');
 var routes = require('./routes');
 var http = require('http');
 var path = require('path');
-var livereload = require('connect-livereload');
 var _ = require('underscore');
 
 var app = express();
@@ -15,6 +14,7 @@ var app = express();
 // development only
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
+  var livereload = require('connect-livereload');
   app.use(livereload());
 }
 
