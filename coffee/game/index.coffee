@@ -37,15 +37,21 @@ require [
     player.body.velocity.y += 500
     fadeArrow(-90)
 
+  updateNumPlayers = (num) ->
+    numPlayersText.setText("Players: #{num}")
+
   socket.on('left', moveLeft)
   socket.on('right', moveRight)
   socket.on('up', moveUp)
   socket.on('down', moveDown)
+  socket.on('players', updateNumPlayers)
 
 
   collectStar = (player, star) ->
     # Removes the star from the screen
     star.kill()
+    if stars.countLiving() is 0
+      $("#overlay").fadeIn(1000).text("You win!")
 
   hitSpike = (player, spike) ->
     player.kill()
@@ -69,6 +75,7 @@ require [
   spikes = null
   deathText = null
   starsText = null
+  numPlayersText = null
 
   create = ->
 
@@ -144,16 +151,16 @@ require [
     stars = game.add.group()
     stars.enableBody = true
 
-    #  Here we'll create 12 of them evenly spaced apart
     i = 0
 
-    while i < 12
+    while i < 5
 
       #  Create a star inside of the 'stars' group
       star = stars.create(game.rnd.realInRange(0, game.world.width), game.rnd.realInRange(0, game.world.height), "star")
       star.smoothed = false
       star.body.collideWorldBounds = true
       star.body.velocity.setTo 0, game.rnd.realInRange(-100, 100)
+      star.scale.setTo 2, 2
 
       #  This just gives each star a slightly random bounce value
       star.body.bounce.y = 1
@@ -168,6 +175,11 @@ require [
     starsText.fixedToCamera = true
     starsText.cameraOffset.setTo(0, 24)
 
+    numPlayersText = game.add.text(0, 0, "", style)
+    numPlayersText.fixedToCamera = true
+    numPlayersText.cameraOffset.setTo(0, 48)
+    updateNumPlayers("???")
+
   update = ->
     game.physics.arcade.collide(player, platforms)
     game.physics.arcade.collide(stars, platforms)
@@ -176,7 +188,7 @@ require [
     game.physics.arcade.overlap(player, spikes, hitSpike, null, this)
 
     deathText.setText( "deaths: #{deaths}" )
-    starsText.setText( "stars collected: #{stars.countDead()}/12" )
+    starsText.setText( "stars collected: #{stars.countDead()}/#{stars.children.length}" )
 
     game.camera.bounds = null
     game.camera.focusOnXY(player.body.x * game.camera.scale.x, player.body.y * game.camera.scale.y)

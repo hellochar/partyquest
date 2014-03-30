@@ -52,11 +52,19 @@ var gamesIo = io.of('/game')
 var DIRECTIONS = ['left', 'right', 'up', 'down']
 
 controllersIo.on('connection', function (socket) {
+
+    var numberOfSockets = Object.keys(controllersIo.manager.connected).length;
+    gamesIo.emit("players", numberOfSockets)
+
     _.each(DIRECTIONS, function(dir) {
         socket.on(dir, function() {
-            console.log("got "+dir+"!");
             gamesIo.emit(dir);
         });
+    });
+
+    socket.on('disconnect', function() {
+        var numberOfSockets = Object.keys(controllersIo.manager.connected).length;
+        gamesIo.emit("players", numberOfSockets)
     });
 });
 
