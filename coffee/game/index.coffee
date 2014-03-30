@@ -6,6 +6,9 @@ require [
 
   socket = io.connect('/game')
 
+  deaths = 0
+  timeStarted = Date.now()
+
   moveLeft = () ->
     #  Move to the left
     player.body.velocity.x += -500
@@ -29,31 +32,40 @@ require [
     # Removes the star from the screen
     star.kill()
 
+  hitSpike = (player, spike) ->
+    player.kill()
+    player.reset(32, 32)
+    deaths += 1
+
   preload = ->
     game.load.image('sky', 'images/sky.png')
     game.load.image('ground', 'images/platform.png')
     game.load.image('star', 'images/star.png')
     game.load.spritesheet('dude', 'images/dude.png', 32, 48)
+    game.load.image('spike', 'images/spikes.png')
 
   player = undefined
   platforms = undefined
   stars = undefined
+  spikes = null
+  deathText = null
+  starsText = null
 
   create = ->
 
     game.antialias = false
 
-    ratio = window.innerWidth / 1400
+    ratio = window.innerWidth / 2000
 
     game.camera.scale.setTo ratio, ratio
 
-    game.world.setBounds(0, 0, 3000, 600)
+    game.world.setBounds(0, 0, 1500, 1900)
 
     #  We're going to be using physics, so enable the Arcade Physics system
     game.physics.startSystem Phaser.Physics.ARCADE
 
     #  A simple background for our game
-    game.add.tileSprite 0, 0, 3000, 600, "sky"
+    game.add.tileSprite 0, 0, game.world.width, game.world.height, "sky"
 
     #  The platforms group contains the ground and the 2 ledges we can jump on
     platforms = game.add.group()
@@ -68,17 +80,24 @@ require [
     #  This stops it from falling away when you jump on it
     ground.body.immovable = true
 
-    for i in [0...5]
-      #  Now let's create two ledges
-      ledge = platforms.create(800 * i, 400, "ground")
-      ledge.smoothed = false
-      ledge.body.immovable = true
-      ledge = platforms.create(-150 + 600 * i, 250, "ground")
-      ledge.smoothed = false
-      ledge.body.immovable = true
+    for i in [0...3]
+      for y in [0...4]
+        #  Now let's create two ledges
+        ledge = platforms.create(800 * i, 400 * y, "ground")
+        ledge.smoothed = false
+        ledge.body.immovable = true
+        ledge = platforms.create(-150 + 600 * i, 250 + 400 * y, "ground")
+        ledge.smoothed = false
+        ledge.body.immovable = true
+
+    spikes = game.add.group()
+    spikes.enableBody = true
+    for i in [0..45]
+      spike = spikes.create(game.rnd.realInRange(40, game.world.width), game.rnd.realInRange(40, game.world.height), "spike")
+      spike.smoothed = false
 
     # The player and its settings
-    player = game.add.sprite(32, 600 - 150, "dude")
+    player = game.add.sprite(32, 32, "dude")
     player.anchor.set(0.5)
     player.smoothed = false
 
@@ -86,7 +105,6 @@ require [
     game.physics.arcade.enable player
 
     player.body.collideWorldBounds = true
-    player.body.gravity.y = 300
 
     window.player = player
 
@@ -115,17 +133,33 @@ require [
     while i < 12
 
       #  Create a star inside of the 'stars' group
-      star = stars.create(i * 70, 0, "star")
+      star = stars.create(game.rnd.realInRange(0, game.world.width), game.rnd.realInRange(0, game.world.height), "star")
       star.smoothed = false
+      star.body.collideWorldBounds = true
+      star.body.velocity.setTo 0, game.rnd.realInRange(-100, 100)
 
       #  This just gives each star a slightly random bounce value
-      star.body.bounce.y = 0.7 + Math.random() * 0.2
+      star.body.bounce.y = 1
       i++
+
+    style = {font: "20pt Arial", fill: "white", align: "left" }
+    deathText = game.add.text(0, 0, "", style)
+    deathText.fixedToCamera = true
+    deathText.cameraOffset.setTo(0, 0)
+
+    starsText = game.add.text(0, 0, "", style)
+    starsText.fixedToCamera = true
+    starsText.cameraOffset.setTo(0, 24)
 
   update = ->
     game.physics.arcade.collide(player, platforms)
     game.physics.arcade.collide(stars, platforms)
+    game.physics.arcade.collide(spikes, spikes)
     game.physics.arcade.overlap(player, stars, collectStar, null, this)
+    game.physics.arcade.overlap(player, spikes, hitSpike, null, this)
+
+    deathText.setText( "deaths: #{deaths}" )
+    starsText.setText( "stars collected: #{stars.countDead()}/12" )
 
     game.camera.bounds = null
     game.camera.focusOnXY(player.body.x * game.camera.scale.x, player.body.y * game.camera.scale.y)
