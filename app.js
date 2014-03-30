@@ -8,6 +8,7 @@ var routes = require('./routes');
 var http = require('http');
 var path = require('path');
 var livereload = require('connect-livereload');
+var _ = require('underscore');
 
 var app = express();
 
@@ -32,6 +33,7 @@ app.use('/js/vendor', express.static(path.join(__dirname, 'bower_components')));
 app.use(express.static(path.join(__dirname, 'compiled')));
 
 app.get('/', routes.index);
+app.get('/game', routes.game);
 
 var server = http.createServer(app);
 var io = require("socket.io").listen(server)
@@ -39,11 +41,23 @@ server.listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
 
-io.sockets.on('connection', function (socket) {
-  socket.emit('news', { hello: 'world' });
-  socket.on('my other event', function (data) {
-    console.log(data);
-  });
+/**************************************
+ *       GAME LOGIC HERE LOL
+ **************************************
+ */
+
+var controllersIo = io.of('/controller')
+var gamesIo = io.of('/game')
+
+var DIRECTIONS = ['left', 'right', 'up', 'down']
+
+controllersIo.on('connection', function (socket) {
+    _.each(DIRECTIONS, function(dir) {
+        socket.on(dir, function() {
+            console.log("got "+dir+"!");
+            gamesIo.emit(dir);
+        });
+    });
 });
 
 require('fs').writeFileSync('.rebooted', 'rebooted')

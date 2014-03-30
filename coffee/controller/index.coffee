@@ -1,10 +1,13 @@
 require [
+  'jquery'
   "socket.io"
-], (io) ->
+], ($, io) ->
 
-  socket = io.connect('http://localhost')
+  socket = io.connect('/controller')
 
-  socket.on('news', (data) ->
-    console.log(data)
-    socket.emit("my other event", {my: 'data'})
-  )
+  registerDirection = (direction) ->
+    $(".arrow.#{direction}").click((evt) ->
+      socket.emit(direction)
+    )
+
+  registerDirection(dir) for dir in ['left', 'right', 'up', 'down']

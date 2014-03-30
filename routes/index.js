@@ -4,5 +4,9 @@
  */
 
 exports.index = function(req, res){
-  res.render('controller', { title: 'Express' });
+  res.render('controller');
+};
+
+exports.game = function(req, res) {
+  res.render('game');
 };

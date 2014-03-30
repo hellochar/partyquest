@@ -19,6 +19,7 @@
     "grunt-concurrent": "~0.3.0",
     "grunt-env": "~0.4.1",
     "connect-livereload": "~0.3.2",
-    "socket.io": "~0.9.16"
+    "socket.io": "~0.9.16",
+    "underscore": "~1.6.0"
   }
 }

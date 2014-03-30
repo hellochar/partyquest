@@ -3,27 +3,32 @@ html, body, .spans {
   height: 100%;
 }
 
-.spans > span {
-  position: absolute;
+.spans {
+  font-size: 40vmin;
 }
 
-.spans .horiz {
-  top: 50%;
+.spans .arrow {
+  position: absolute;
+  margin: auto;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 40vmin;
+  width: 40vmin;
 }
+
 .spans .left {
-  left: 0px;
+  right: initial;
 }
 .spans .right {
-  right: 0px;
+  left: initial;
 }
 
-.spans .vert {
-  left: 50%;
-}
 .spans .up {
-  top: 0%;
+  bottom: initial;
 }
 
 .spans .down {
-  bottom: 0;
+  top: initial;
 }
