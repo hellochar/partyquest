@@ -51,10 +51,17 @@ var gamesIo = io.of('/game')
 
 var DIRECTIONS = ['left', 'right', 'up', 'down']
 
+var numPlayers = 0
+
+function updateNumPlayers() {
+    gamesIo.emit("players", numPlayers)
+}
+
 controllersIo.on('connection', function (socket) {
 
-    var numberOfSockets = Object.keys(controllersIo.manager.connected).length;
-    gamesIo.emit("players", numberOfSockets)
+    numPlayers += 1
+
+    updateNumPlayers()
 
     _.each(DIRECTIONS, function(dir) {
         socket.on(dir, function() {
@@ -63,9 +70,13 @@ controllersIo.on('connection', function (socket) {
     });
 
     socket.on('disconnect', function() {
-        var numberOfSockets = Object.keys(controllersIo.manager.connected).length;
-        gamesIo.emit("players", numberOfSockets)
-    });
+        numPlayers -= 1
+        updateNumPlayers()
+    })
 });
+
+gamesIo.on("connection", function (socket) {
+    updateNumPlayers()
+})
 
 require('fs').writeFileSync('.rebooted', 'rebooted')

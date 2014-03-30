@@ -4,7 +4,7 @@ require [
   'phaser'
 ], ($, io, Phaser) ->
 
-  $("#overlay").fadeOut(0)
+  $("#overlay").hide()
 
   socket = io.connect('/game')
 
@@ -13,6 +13,7 @@ require [
 
   fadeArrow = (angle) ->
     {x: x, y: y} = player.body
+    game.sound.play('move')
     arrow = game.add.sprite(x, y, "left-arrow")
     arrow.angle = angle
     arrow.anchor.set(0.5)
@@ -40,26 +41,32 @@ require [
   updateNumPlayers = (num) ->
     numPlayersText.setText("Players: #{num}")
 
-  socket.on('left', moveLeft)
-  socket.on('right', moveRight)
-  socket.on('up', moveUp)
-  socket.on('down', moveDown)
-  socket.on('players', updateNumPlayers)
-
+  setupSockets = () ->
+    socket.on('left', moveLeft)
+    socket.on('right', moveRight)
+    socket.on('up', moveUp)
+    socket.on('down', moveDown)
+    socket.on('players', updateNumPlayers)
 
   collectStar = (player, star) ->
     # Removes the star from the screen
+    game.sound.play('pickup-coin')
     star.kill()
     if stars.countLiving() is 0
       $("#overlay").fadeIn(1000).text("You win!")
 
   hitSpike = (player, spike) ->
     player.kill()
+    game.sound.play('death')
+    game.sound.play('hit-spike')
     deaths += 1
     $("#overlay").fadeIn(1000, () -> 
       player.reset(32, 32)
       $("#overlay").fadeOut(1000)
     )
+
+  playerCollided = (player, wall) ->
+    game.sound.play('hit-wall')
 
   preload = ->
     game.load.image('sky', 'images/sky.png')
@@ -68,6 +75,12 @@ require [
     game.load.spritesheet('dude', 'images/dude.png', 32, 48)
     game.load.image('spike', 'images/spikes.png')
     game.load.image('left-arrow', 'images/arrow.png')
+
+    game.load.audio('pickup-coin', 'audio/Pickup_Coin.wav')
+    game.load.audio('hit-spike', 'audio/Hit_Spike.wav')
+    game.load.audio('hit-wall', 'audio/Hit_Wall.wav')
+    game.load.audio('move', 'audio/Move.wav')
+    game.load.audio('death', 'audio/death.mp3')
 
   player = undefined
   platforms = undefined
@@ -180,8 +193,10 @@ require [
     numPlayersText.cameraOffset.setTo(0, 48)
     updateNumPlayers("???")
 
+    setupSockets()
+
   update = ->
-    game.physics.arcade.collide(player, platforms)
+    game.physics.arcade.collide(player, platforms, playerCollided)
     game.physics.arcade.collide(stars, platforms)
     game.physics.arcade.collide(spikes, spikes)
     game.physics.arcade.overlap(player, stars, collectStar, null, this)
