@@ -18,6 +18,7 @@
     "grunt-nodemon": "~0.2.0",
     "grunt-concurrent": "~0.3.0",
     "grunt-env": "~0.4.1",
-    "connect-livereload": "~0.3.2"
+    "connect-livereload": "~0.3.2",
+    "socket.io": "~0.9.16"
   }
 }

@@ -1,3 +1,0 @@
-require [
-], () ->
-  alert "yep2"

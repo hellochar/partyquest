@@ -1,0 +1,15 @@
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/stylesheets/bootstrap.css')
+    link(rel='stylesheet', href='/stylesheets/normalize.css')
+    script(type='text/javascript' src='/js/requireConfig.js')
+    script(type='text/javascript' data-main="controller/index.js" src='/js/vendor/require.js')
+  body
+    .spans
+      span(class='horiz left glyphicon glyphicon-arrow-left')
+      span(class='horiz right glyphicon glyphicon-arrow-right')
+      span(class='vert up glyphicon glyphicon-arrow-up')
+      span(class='vert down glyphicon glyphicon-arrow-down')

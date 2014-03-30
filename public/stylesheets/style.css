@@ -1,8 +1,29 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+html, body, .spans {
+  width: 100%;
+  height: 100%;
 }
 
-a {
-  color: #00B7FF;
+.spans > span {
+  position: absolute;
+}
+
+.spans .horiz {
+  top: 50%;
+}
+.spans .left {
+  left: 0px;
+}
+.spans .right {
+  right: 0px;
+}
+
+.spans .vert {
+  left: 50%;
+}
+.spans .up {
+  top: 0%;
+}
+
+.spans .down {
+  bottom: 0;
 }
