@@ -1,10 +1,9 @@
 {
   "name": "partyquest",
-  "version": "0.0.1-2",
+  "version": "0.0.1-5",
   "main": "app.js",
   "private": true,
   "scripts": {
-    "postdeploy": "grunt rebuild",
     "start": "node app.js"
   },
   "dependencies": {
