@@ -1,9 +1,10 @@
 {
   "name": "partyquest",
-  "version": "0.0.1",
+  "version": "0.0.1-2",
   "main": "app.js",
   "private": true,
   "scripts": {
+    "postdeploy": "grunt rebuild",
     "start": "node app.js"
   },
   "dependencies": {
@@ -18,6 +19,11 @@
     "grunt-env": "~0.4.1",
     "connect-livereload": "~0.3.2",
     "socket.io": "~0.9.16",
-    "underscore": "~1.6.0"
+    "underscore": "~1.6.0",
+    "connect-coffee-script": "~0.1.6"
+  },
+  "subdomain": "hellochar-partyquest",
+  "engines": {
+    "node": "0.10.x"
   }
 }

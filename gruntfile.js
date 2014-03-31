@@ -109,6 +109,7 @@ module.exports = function(grunt) {
         }
     });
 
-    grunt.registerTask('default', ['env:dev', 'clean:compiled', 'coffee:all', 'concurrent:dev']);
+    grunt.registerTask('rebuild', ['clean:compiled', 'coffee:all'])
+    grunt.registerTask('default', ['env:dev', 'rebuild', 'concurrent:dev']);
 }
 

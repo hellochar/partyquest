@@ -8,6 +8,7 @@ var routes = require('./routes');
 var http = require('http');
 var path = require('path');
 var _ = require('underscore');
+var coffeescript = require("connect-coffee-script");
 
 var app = express();
 
@@ -18,19 +19,28 @@ if ('development' == app.get('env')) {
   app.use(livereload());
 }
 
+
 // all environments
 app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
+
 app.use(express.favicon());
 app.use(express.logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(express.methodOverride());
 app.use(app.router);
+
+app.use(coffeescript({
+    src: path.join(__dirname, 'coffee'),
+    bare: true,
+    dest: path.join(__dirname, 'compiled'),
+}));
+
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/js/vendor', express.static(path.join(__dirname, 'bower_components')));
 app.use(express.static(path.join(__dirname, 'compiled')));
+app.use('/js/vendor', express.static(path.join(__dirname, 'bower_components')));
 
 app.get('/', routes.index);
 app.get('/game', routes.game);
