@@ -10,22 +10,6 @@ module.exports = function(grunt) {
             options: {force: true},
             compiled: ['compiled/js/'],
         },
-        coffee: {
-            all: {
-                files: [{
-                    expand: true,
-                    cwd: 'coffee/',
-                    src: '**/*.coffee',
-                    dest: 'compiled/js/',
-                    ext: '.js',
-                }],
-            },
-            singleFile: {
-                src: '',
-                dest: '',
-            },
-        },
-
         env: {
             dev : {
                 NODE_ENV: 'development',
@@ -35,14 +19,6 @@ module.exports = function(grunt) {
         watch: {
             options: {
                 livereload: true,
-            },
-            coffee_changed: {
-                files: 'coffee/**/*.coffee',
-                tasks: 'coffee:singleFile',
-                options: {
-                    spawn: false,
-                    event: ['added', 'changed'],
-                },
             },
             coffee_deleted: {
                 files: 'coffee/**/*.coffee',
@@ -103,13 +79,9 @@ module.exports = function(grunt) {
         if(action == 'deleted') {
             console.log("deleting", js_filepath);
             grunt.file.delete(js_filepath);
-        } else {
-            grunt.config(['coffee', 'singleFile', 'src'], filepathString);
-            grunt.config(['coffee', 'singleFile', 'dest'], js_filepath);
         }
     });
 
-    grunt.registerTask('rebuild', ['clean:compiled', 'coffee:all'])
-    grunt.registerTask('default', ['env:dev', 'rebuild', 'concurrent:dev']);
+    grunt.registerTask('default', ['env:dev', 'concurrent:dev']);
 }
 
