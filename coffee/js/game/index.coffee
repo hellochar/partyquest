@@ -48,6 +48,7 @@ require [
     game.load.audio('pickup-coin', 'audio/Pickup_Coin.wav')
     game.load.audio('hit-wall', 'audio/Hit_Wall.wav')
     game.load.audio('hit-spike', 'audio/Hit_Spike.wav')
+    game.load.audio('pig_grunt', 'audio/pig_grunt.mp3')
 
 
   create = ->
@@ -113,7 +114,7 @@ require [
 
     hitBaddie = (player, wall) ->
       player.kill()
-      # game.sound.play('hit-baddie')
+      game.sound.play('pig_grunt')
 
     game.physics.arcade.collide(player.sprite, level.platforms, hitWall)
     game.physics.arcade.collide(stars, level.platforms)

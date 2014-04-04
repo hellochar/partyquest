@@ -8,7 +8,7 @@ define [
       @deaths = 0
 
     preload: () ->
-      game.load.spritesheet('dude', 'images/dude.png', 32, 48)
+      game.load.spritesheet('dude', 'images/dude.png', 32, 42)
       game.load.image('left-arrow', 'images/arrow.png')
 
       game.load.audio('move', 'audio/Move.wav')
