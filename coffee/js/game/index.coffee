@@ -144,3 +144,18 @@ require [
     sprite.body.velocity.setMagnitude(sprite.body.velocity.getMagnitude() * amount)
 
   window.game = game
+
+  resizeGame = () ->
+    width = $(window).width()
+    height = $(window).height()
+    game.width = width
+    game.height = height
+    game.stage.bounds.width = width
+    game.stage.bounds.height = height
+    game.camera.view.width = width
+    game.camera.view.height = height
+
+    if game.renderType is Phaser.WEBGL
+      game.renderer.resize(width, height)
+
+  $(window).resize(resizeGame)

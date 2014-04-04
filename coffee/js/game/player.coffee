@@ -48,7 +48,7 @@ define [
     update: () ->
       @game.drag(@sprite, 0.5)
 
-      if Math.abs(@sprite.body.velocity.x) < 10
+      if Math.abs(@sprite.body.velocity.x) < 1
         @sprite.body.velocity.x = 0
         @sprite.animations.stop()
         @sprite.frame = 4

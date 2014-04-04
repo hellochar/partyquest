@@ -22,6 +22,10 @@
     "connect-coffee-script": "~0.1.6"
   },
   "subdomain": "hellochar-partyquest",
+  "domains": [
+    "party-quest.com",
+    "www.party-quest.com"
+  ],
   "engines": {
     "node": "0.10.x"
   }
