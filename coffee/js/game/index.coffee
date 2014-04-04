@@ -11,7 +11,6 @@ require [
 
   socket = io.connect('/game')
 
-  deaths = 0
   timeStarted = Date.now()
 
   updateNumPlayers = (num) ->
@@ -107,7 +106,7 @@ require [
     game.physics.arcade.overlap(player.sprite, stars, collectStar, null, this)
     game.physics.arcade.collide(stars, level.platforms)
 
-    deathText.setText( "deaths: #{deaths}" )
+    deathText.setText( "deaths: #{player.deaths}" )
     starsText.setText( "stars collected: #{stars.countDead()}/#{stars.children.length}" )
 
     game.camera.bounds = null

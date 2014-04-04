@@ -5,6 +5,7 @@ define [
   class Player
     constructor: (@game) ->
       @sprite = null
+      @deaths = 0
 
     preload: () ->
       game.load.spritesheet('dude', 'images/dude.png', 32, 48)
@@ -36,7 +37,7 @@ define [
       ], 10, true
       @sprite.events.onKilled.add(() =>
         game.sound.play('death')
-        deaths += 1
+        @deaths += 1
         setTimeout(() =>
           @sprite.reset(32, 32)
         , 1000)
