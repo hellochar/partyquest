@@ -20,6 +20,14 @@ module.exports = function(grunt) {
             options: {
                 livereload: true,
             },
+            coffee_changed: {
+                files: 'coffee/**/*.coffee',
+                tasks: '',
+                options: {
+                    spawn: false,
+                    event: ['added', 'changed'],
+                },
+            },
             coffee_deleted: {
                 files: 'coffee/**/*.coffee',
                 tasks: '',
@@ -55,7 +63,6 @@ module.exports = function(grunt) {
     });
 
     grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-contrib-coffee');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-concurrent');
     grunt.loadNpmTasks('grunt-env');

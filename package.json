@@ -1,6 +1,6 @@
 {
   "name": "partyquest",
-  "version": "0.0.1-5",
+  "version": "0.0.1-7",
   "main": "app.js",
   "private": true,
   "scripts": {
