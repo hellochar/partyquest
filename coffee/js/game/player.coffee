@@ -45,7 +45,7 @@ define [
       @setupSockets()
 
     update: () ->
-      @sprite.body.velocity.setMagnitude(@sprite.body.velocity.getMagnitude() * .8)
+      @game.drag(@sprite)
 
       if Math.abs(@sprite.body.velocity.x) < 10
         @sprite.body.velocity.x = 0

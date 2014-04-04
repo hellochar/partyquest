@@ -30,6 +30,8 @@ require [
   starsText = null
   numPlayersText = null
 
+  baddie = null
+
 
   preload = ->
     level = new DemoLevel(game)
@@ -39,6 +41,8 @@ require [
     player = new Player(game)
     player.preload()
     window.player = player
+
+    game.load.spritesheet('baddie', 'images/baddie.png', 32, 32)
 
     game.load.image('star', 'images/star.png')
     game.load.audio('pickup-coin', 'audio/Pickup_Coin.wav')
@@ -74,6 +78,10 @@ require [
       star.body.bounce.y = 1
       i++
 
+    baddie = game.add.sprite(450, 450, 'baddie')
+    baddie.smoothed = false
+    game.physics.arcade.enable(baddie)
+
     style = {font: "20pt Arial", fill: "white", align: "left" }
     deathText = game.add.text(0, 0, "", style)
     deathText.fixedToCamera = true
@@ -94,6 +102,8 @@ require [
     level.update()
     player.update()
 
+    game.physics.arcade.moveToObject(baddie, player.sprite, 60)
+
     hitWall = (player, wall) ->
       game.sound.play('hit-wall')
 
@@ -101,10 +111,19 @@ require [
       player.kill()
       game.sound.play('hit-spike')
 
+    hitBaddie = (player, wall) ->
+      player.kill()
+      # game.sound.play('hit-baddie')
+
     game.physics.arcade.collide(player.sprite, level.platforms, hitWall)
-    game.physics.arcade.overlap(player.sprite, level.spikes, hitSpike, null, this)
-    game.physics.arcade.overlap(player.sprite, stars, collectStar, null, this)
     game.physics.arcade.collide(stars, level.platforms)
+    game.physics.arcade.collide(baddie, level.platforms)
+    game.physics.arcade.collide(baddie, level.spikes)
+
+    game.physics.arcade.overlap(player.sprite, level.spikes, hitSpike, null, this)
+    game.physics.arcade.overlap(player.sprite, baddie, hitBaddie, null, this)
+
+    game.physics.arcade.overlap(player.sprite, stars, collectStar, null, this)
 
     deathText.setText( "deaths: #{player.deaths}" )
     starsText.setText( "stars collected: #{stars.countDead()}/#{stars.children.length}" )
@@ -118,4 +137,8 @@ require [
     update: update
   )
   game.socket = socket
+
+  game.drag = (sprite, amount = 0.8) ->
+    sprite.body.velocity.setMagnitude(sprite.body.velocity.getMagnitude() * amount)
+
   window.game = game

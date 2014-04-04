@@ -34,7 +34,8 @@ define [
       @spikes.enableBody = true
       for i in [0..45]
         spike = @spikes.create(@game.rnd.realInRange(40, @game.world.width), @game.rnd.realInRange(40, @game.world.height), "spike")
+        spike.body.collideWorldBounds = true
         spike.smoothed = false
 
     update: () =>
-
+      @spikes.forEach(@game.drag, null)
