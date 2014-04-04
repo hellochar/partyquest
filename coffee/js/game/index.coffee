@@ -118,6 +118,7 @@ require [
 
     game.physics.arcade.collide(player.sprite, level.platforms, hitWall)
     game.physics.arcade.collide(stars, level.platforms)
+    game.physics.arcade.collide(level.spikes)
     game.physics.arcade.collide(baddie, level.platforms)
     game.physics.arcade.collide(baddie, level.spikes)
 

@@ -32,7 +32,7 @@ define [
 
       @spikes = game.add.group()
       @spikes.enableBody = true
-      for i in [0..45]
+      for i in [0..35]
         spike = @spikes.create(@game.rnd.realInRange(40, @game.world.width), @game.rnd.realInRange(40, @game.world.height), "spike")
         spike.body.collideWorldBounds = true
         spike.smoothed = false

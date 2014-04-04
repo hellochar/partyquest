@@ -6,6 +6,7 @@ define [
     constructor: (@game) ->
       @sprite = null
       @deaths = 0
+      @speed = 1100
 
     preload: () ->
       game.load.spritesheet('dude', 'images/dude.png', 32, 42)
@@ -45,7 +46,7 @@ define [
       @setupSockets()
 
     update: () ->
-      @game.drag(@sprite)
+      @game.drag(@sprite, 0.5)
 
       if Math.abs(@sprite.body.velocity.x) < 10
         @sprite.body.velocity.x = 0
@@ -75,17 +76,17 @@ define [
 
     moveLeft: () =>
       #  Move to the left
-      @sprite.body.velocity.x += -500
+      @sprite.body.velocity.x += -@speed
       @fadeArrow(0)
 
     moveRight: () =>
-      @sprite.body.velocity.x += 500
+      @sprite.body.velocity.x += @speed
       @fadeArrow(180)
 
     moveUp: () =>
-      @sprite.body.velocity.y += -500
+      @sprite.body.velocity.y += -@speed
       @fadeArrow(90)
 
     moveDown: () =>
-      @sprite.body.velocity.y += 500
+      @sprite.body.velocity.y += @speed
       @fadeArrow(-90)
