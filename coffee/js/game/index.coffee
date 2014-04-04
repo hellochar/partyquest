@@ -34,7 +34,7 @@ require [
 
 
   preload = ->
-    level = new DemoLevel(game)
+    level = new Level(game)
     level.preload()
     window.level = level
 
@@ -56,7 +56,8 @@ require [
     game.stage.disableVisibilityChange = true
 
     #  We're going to be using physics, so enable the Arcade Physics system
-    game.physics.startSystem Phaser.Physics.ARCADE
+    game.physics.startSystem(Phaser.Physics.ARCADE)
+    game.physics.arcade.TILE_BIAS = 128
 
     level.create()
     player.create()
@@ -80,6 +81,7 @@ require [
       i++
 
     baddie = game.add.sprite(450, 450, 'baddie')
+    baddie.anchor.set(0.5)
     baddie.smoothed = false
     game.physics.arcade.enable(baddie)
 
@@ -122,6 +124,8 @@ require [
     game.physics.arcade.collide(baddie, level.platforms)
     game.physics.arcade.collide(baddie, level.spikes)
 
+    game.physics.arcade.collide(player.sprite, level.worldLayer) if level.worldLayer
+
     game.physics.arcade.overlap(player.sprite, level.spikes, hitSpike, null, this)
     game.physics.arcade.overlap(player.sprite, baddie, hitBaddie, null, this)
 
@@ -130,8 +134,9 @@ require [
     deathText.setText( "deaths: #{player.deaths}" )
     starsText.setText( "stars collected: #{stars.countDead()}/#{stars.children.length}" )
 
-    game.camera.bounds = null
-    game.camera.focusOnXY(player.sprite.body.x * game.camera.scale.x, player.sprite.body.y * game.camera.scale.y)
+    game.camera.follow(player.sprite)
+    # game.camera.bounds = null
+    # game.camera.focusOnXY(player.sprite.body.x * game.camera.scale.x, player.sprite.body.y * game.camera.scale.y)
 
   game = new Phaser.Game(window.innerWidth, window.innerHeight, Phaser.AUTO, "viewport",
     preload: preload

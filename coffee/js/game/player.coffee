@@ -24,18 +24,8 @@ define [
       @sprite.body.collideWorldBounds = true
 
       #  Our two animations, walking left and right.
-      @sprite.animations.add "left", [
-        0
-        1
-        2
-        3
-      ], 10, true
-      @sprite.animations.add "right", [
-        5
-        6
-        7
-        8
-      ], 10, true
+      @sprite.animations.add("left", [0, 1, 2, 3], 10, true)
+      @sprite.animations.add("right", [5, 6, 7, 8], 10, true)
       @sprite.events.onKilled.add(() =>
         game.sound.play('death')
         @deaths += 1
