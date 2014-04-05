@@ -57,7 +57,7 @@ require [
 
     #  We're going to be using physics, so enable the Arcade Physics system
     game.physics.startSystem(Phaser.Physics.ARCADE)
-    game.physics.arcade.TILE_BIAS = 128
+    game.physics.arcade.TILE_BIAS = 64
 
     level.create()
     player.create()
@@ -121,6 +121,7 @@ require [
     game.physics.arcade.collide(player.sprite, level.platforms, hitWall)
     game.physics.arcade.collide(stars, level.platforms)
     game.physics.arcade.collide(level.spikes)
+    game.physics.arcade.collide(level.spikes, level.platforms)
     game.physics.arcade.collide(baddie, level.platforms)
     game.physics.arcade.collide(baddie, level.spikes)
 
@@ -143,7 +144,7 @@ require [
   )
   game.socket = socket
 
-  game.drag = (sprite, amount = 0.8) ->
+  game.drag = (sprite, amount = 0.5) ->
     sprite.body.velocity.setMagnitude(sprite.body.velocity.getMagnitude() * amount)
 
   window.game = game
