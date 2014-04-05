@@ -124,8 +124,6 @@ require [
     game.physics.arcade.collide(baddie, level.platforms)
     game.physics.arcade.collide(baddie, level.spikes)
 
-    game.physics.arcade.collide(player.sprite, level.worldLayer) if level.worldLayer
-
     game.physics.arcade.overlap(player.sprite, level.spikes, hitSpike, null, this)
     game.physics.arcade.overlap(player.sprite, baddie, hitBaddie, null, this)
 
