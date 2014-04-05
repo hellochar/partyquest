@@ -73,10 +73,11 @@ require [
       star = stars.create(game.rnd.realInRange(0, game.world.width), game.rnd.realInRange(0, game.world.height), "star")
       star.smoothed = false
       star.body.collideWorldBounds = true
-      star.body.velocity.setTo 0, game.rnd.realInRange(-100, 100)
-      star.scale.setTo 2, 2
+      star.body.velocity.setTo(0, game.rnd.realInRange(-100, 100))
+      star.scale.setTo(2, 2)
+      star.body.width = star.width
+      star.body.height = star.height
 
-      #  This just gives each star a slightly random bounce value
       star.body.bounce.y = 1
       i++
 
@@ -158,6 +159,8 @@ require [
     game.stage.bounds.height = height
     game.camera.view.width = width
     game.camera.view.height = height
+    level.platforms.width = width
+    level.platforms.height = height
 
     if game.renderType is Phaser.WEBGL
       game.renderer.resize(width, height)
