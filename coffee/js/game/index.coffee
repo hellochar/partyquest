@@ -16,22 +16,10 @@ require [
   updateNumPlayers = (num) ->
     numPlayersText.setText("Players: #{num}")
 
-  collectStar = (player, star) ->
-    # Removes the star from the screen
-    game.sound.play('pickup-coin')
-    star.kill()
-    if stars.countLiving() is 0
-      $("#overlay").fadeIn(1000).text("You win!")
-
   level = undefined
   player = undefined
-  stars = undefined
   deathText = null
-  starsText = null
   numPlayersText = null
-
-  baddie = null
-
 
   preload = ->
     level = new Level(game)
@@ -44,7 +32,6 @@ require [
 
     game.load.spritesheet('baddie', 'images/baddie.png', 32, 32)
 
-    game.load.image('star', 'images/star.png')
     game.load.audio('pickup-coin', 'audio/Pickup_Coin.wav')
     game.load.audio('hit-wall', 'audio/Hit_Wall.wav')
     game.load.audio('hit-spike', 'audio/Hit_Spike.wav')
@@ -63,38 +50,10 @@ require [
     level.create()
     player.create()
 
-    stars = game.add.group()
-    stars.enableBody = true
-
-    i = 0
-
-    while i < 5
-
-      #  Create a star inside of the 'stars' group
-      star = stars.create(game.rnd.realInRange(0, game.world.width), game.rnd.realInRange(0, game.world.height), "star")
-      star.smoothed = false
-      star.body.collideWorldBounds = true
-      star.body.velocity.setTo(0, game.rnd.realInRange(-100, 100))
-      star.scale.setTo(2, 2)
-      star.body.width = star.width
-      star.body.height = star.height
-
-      star.body.bounce.y = 1
-      i++
-
-    baddie = game.add.sprite(450, 450, 'baddie')
-    baddie.anchor.set(0.5)
-    baddie.smoothed = false
-    game.physics.arcade.enable(baddie)
-
     style = {font: "20pt Arial", fill: "white", align: "left" }
     deathText = game.add.text(0, 0, "", style)
     deathText.fixedToCamera = true
     deathText.cameraOffset.setTo(0, 0)
-
-    starsText = game.add.text(0, 0, "", style)
-    starsText.fixedToCamera = true
-    starsText.cameraOffset.setTo(0, 24)
 
     numPlayersText = game.add.text(0, 0, "", style)
     numPlayersText.fixedToCamera = true
@@ -107,8 +66,6 @@ require [
     level.update()
     player.update()
 
-    game.physics.arcade.moveToObject(baddie, player.sprite, 60)
-
     hitWall = (player, wall) ->
       game.sound.play('hit-wall')
 
@@ -120,11 +77,12 @@ require [
       player.kill()
       game.sound.play('pig_grunt')
 
+    hitExit = (player, wall) ->
+      $("#overlay").fadeIn(1000).text("you win!")
+
     # player
     game.physics.arcade.collide(player.sprite, level.platforms, hitWall)
-    game.physics.arcade.collide(player.sprite, level.boxes, hitWall)
 
-    game.physics.arcade.collide(stars, level.platforms)
     game.physics.arcade.collide(level.spikes)
     game.physics.arcade.collide(level.spikes, level.platforms)
 
@@ -134,17 +92,18 @@ require [
     game.physics.arcade.collide(level.boxes, level.platforms)
 
     # baddie
-    game.physics.arcade.collide(baddie, level.platforms)
-    game.physics.arcade.collide(baddie, level.spikes)
-    game.physics.arcade.collide(baddie, level.boxes)
+    game.physics.arcade.collide(level.baddies, level.platforms)
+    game.physics.arcade.collide(level.baddies, level.spikes)
+    game.physics.arcade.collide(level.baddies, level.boxes)
+    game.physics.arcade.collide(level.baddies)
+
+    level.baddies.forEach(game.debug.body, game.debug)
 
     game.physics.arcade.overlap(player.sprite, level.spikes, hitSpike, null, this)
-    game.physics.arcade.overlap(player.sprite, baddie, hitBaddie, null, this)
-
-    game.physics.arcade.overlap(player.sprite, stars, collectStar, null, this)
+    game.physics.arcade.overlap(player.sprite, level.baddies, hitBaddie, null, this)
+    game.physics.arcade.overlap(player.sprite, level.exit, hitExit, null, this)
 
     deathText.setText( "deaths: #{player.deaths}" )
-    starsText.setText( "stars collected: #{stars.countDead()}/#{stars.children.length}" )
 
     game.camera.follow(player.sprite)
 

@@ -1,6 +1,7 @@
 define [
+  'game/baddie'
   'phaser'
-], (Phaser) ->
+], (Baddie, Phaser) ->
   class Level
     constructor: (@game) ->
 
@@ -25,14 +26,19 @@ define [
       @spikes = game.add.group()
       @spikes.enableBody = true
       @map.createFromObjects('Spike Layer', 485, 'spike', undefined, undefined, undefined, @spikes)
-      @spikes.forEach(((spike) -> spike.body.y -= 32), null)
+      @spikes.forEach(((sprite) -> sprite.body.y -= 32), null)
 
       @boxes = game.add.group()
       @boxes.enableBody = true
       @map.createFromObjects('Box Layer', 486, 'box', undefined, undefined, undefined, @boxes)
       @boxes.forEach(((sprite) -> sprite.body.y -= 32), null)
 
-
+      @baddies = game.add.group()
+      @baddies.enableBody = true
+      @map.createFromObjects('Baddies', 488, 'baddie', undefined, undefined, undefined, @baddies, Baddie)
+      @baddies.forEach((baddie) ->
+        baddie.anchor.set(0.5)
+      )
 
       @spawnLocation = new Phaser.Point(@map.collision.Spawn[0].x, @map.collision.Spawn[0].y)
 
@@ -43,3 +49,4 @@ define [
     update: () =>
       @spikes.forEach(@game.drag, null)
       @boxes.forEach(@game.drag, null)
+      @baddies.forEach((baddie) -> baddie.update())
