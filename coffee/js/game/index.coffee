@@ -36,11 +36,11 @@ require [
   preload = ->
     level = new Level(game)
     level.preload()
-    window.level = level
+    game.level = level
 
     player = new Player(game)
     player.preload()
-    window.player = player
+    game.player = player
 
     game.load.spritesheet('baddie', 'images/baddie.png', 32, 32)
 
@@ -59,6 +59,7 @@ require [
     game.physics.startSystem(Phaser.Physics.ARCADE)
     game.physics.arcade.TILE_BIAS = 64
 
+    # the level must be created before the player
     level.create()
     player.create()
 
@@ -119,12 +120,23 @@ require [
       player.kill()
       game.sound.play('pig_grunt')
 
+    # player
     game.physics.arcade.collide(player.sprite, level.platforms, hitWall)
+    game.physics.arcade.collide(player.sprite, level.boxes, hitWall)
+
     game.physics.arcade.collide(stars, level.platforms)
     game.physics.arcade.collide(level.spikes)
     game.physics.arcade.collide(level.spikes, level.platforms)
+
+    # boxes
+    game.physics.arcade.collide(level.boxes)
+    game.physics.arcade.collide(level.spikes, level.boxes)
+    game.physics.arcade.collide(level.boxes, level.platforms)
+
+    # baddie
     game.physics.arcade.collide(baddie, level.platforms)
     game.physics.arcade.collide(baddie, level.spikes)
+    game.physics.arcade.collide(baddie, level.boxes)
 
     game.physics.arcade.overlap(player.sprite, level.spikes, hitSpike, null, this)
     game.physics.arcade.overlap(player.sprite, baddie, hitBaddie, null, this)
@@ -135,8 +147,6 @@ require [
     starsText.setText( "stars collected: #{stars.countDead()}/#{stars.children.length}" )
 
     game.camera.follow(player.sprite)
-    # game.camera.bounds = null
-    # game.camera.focusOnXY(player.sprite.body.x * game.camera.scale.x, player.sprite.body.y * game.camera.scale.y)
 
   game = new Phaser.Game(window.innerWidth, window.innerHeight, Phaser.AUTO, "viewport",
     preload: preload

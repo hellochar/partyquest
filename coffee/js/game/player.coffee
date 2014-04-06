@@ -9,14 +9,14 @@ define [
       @speed = 1100
 
     preload: () ->
-      game.load.spritesheet('dude', 'images/dude.png', 32, 42)
-      game.load.image('left-arrow', 'images/arrow.png')
+      @game.load.spritesheet('dude', 'images/dude.png', 32, 42)
+      @game.load.image('left-arrow', 'images/arrow.png')
 
-      game.load.audio('move', 'audio/Move.wav')
-      game.load.audio('death', 'audio/death.mp3')
+      @game.load.audio('move', 'audio/Move.wav')
+      @game.load.audio('death', 'audio/death.mp3')
 
     create: () ->
-      @sprite = game.add.sprite(32, 32, "dude")
+      @sprite = @game.add.sprite(@game.level.spawnLocation.x, @game.level.spawnLocation.y, "dude")
       @sprite.anchor.set(0.5)
       @sprite.smoothed = false
       @game.physics.arcade.enable(@sprite)
@@ -27,10 +27,10 @@ define [
       @sprite.animations.add("left", [0, 1, 2, 3], 10, true)
       @sprite.animations.add("right", [5, 6, 7, 8], 10, true)
       @sprite.events.onKilled.add(() =>
-        game.sound.play('death')
+        @game.sound.play('death')
         @deaths += 1
         setTimeout(() =>
-          @sprite.reset(32, 32)
+          @sprite.reset(@game.level.spawnLocation.x, @game.level.spawnLocation.y)
         , 1000)
       )
       @setupSockets()
@@ -56,8 +56,8 @@ define [
 
     fadeArrow: (angle) =>
       {x: x, y: y} = @sprite.body
-      game.sound.play('move')
-      arrow = game.add.sprite(x, y, "left-arrow")
+      @game.sound.play('move')
+      arrow = @game.add.sprite(x, y, "left-arrow")
       arrow.angle = angle
       arrow.anchor.set(0.5)
       setTimeout(() ->
