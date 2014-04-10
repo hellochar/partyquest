@@ -21,10 +21,3 @@ define [
           @body.velocity.y += 200
         else if @body.velocity.y < 0
           @body.velocity.y -= 200
-
-    collidedWith: (other) =>
-    #   if @direction is "down"
-    #     @direction = "up"
-    #   else if @direction is "up"
-    #     @direction = "down"
-

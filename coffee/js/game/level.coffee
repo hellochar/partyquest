@@ -50,7 +50,7 @@ define [
         baddie.anchor.set(0.5)
       )
 
-      @spawnLocation = new Phaser.Point(@map.collision.Spawn[0].x + 16, @map.collision.Spawn[0].y + 16)
+      @spawnLocation = new Phaser.Point(@map.collision.Spawn[0].x, @map.collision.Spawn[0].y)
 
       @exit = game.add.sprite(@map.objects.Exit[0].x, @map.objects.Exit[0].y, 'exit')
       @exit.anchor.setTo(0, 1)
@@ -64,19 +64,16 @@ define [
 
       # baddie
       game.physics.arcade.collide(@baddies, @platforms)
+      game.physics.arcade.collide(@baddies, @spikes)
       game.physics.arcade.collide(@baddies, @boxes)
       game.physics.arcade.collide(@baddies)
 
       # boxes
       game.physics.arcade.collide(@boxes)
+      game.physics.arcade.collide(@spikes, @boxes)
       game.physics.arcade.collide(@boxes, @platforms)
 
-      spikesCollide = (spike, other) ->
-        spike.collidedWith(other)
-
       #spikes
-      game.physics.arcade.collide(@spikes, undefined, spikesCollide)
-      game.physics.arcade.collide(@spikes, @baddies, spikesCollide)
-      game.physics.arcade.collide(@spikes, @boxes, spikesCollide)
-      game.physics.arcade.collide(@spikes, @platforms, spikesCollide)
+      game.physics.arcade.collide(@spikes)
+      game.physics.arcade.collide(@spikes, @platforms)
 

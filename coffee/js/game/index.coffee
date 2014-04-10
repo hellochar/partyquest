@@ -66,9 +66,9 @@ require [
     game.physics.arcade.TILE_BIAS = 64
 
     # the level must be created before the player
-    # overlay("Level 1")
-    $("#overlay").hide()
-    loadLevel(2)
+    overlay("Level 1")
+    # $("#overlay").hide()
+    loadLevel(1)
     player.create()
 
     style = {font: "20pt Arial", fill: "white", align: "left" }
@@ -78,7 +78,7 @@ require [
 
     numPlayersText = game.add.text(0, 0, "", style)
     numPlayersText.fixedToCamera = true
-    numPlayersText.cameraOffset.setTo(0, 48)
+    numPlayersText.cameraOffset.setTo(0, 24)
     updateNumPlayers("???")
 
     socket.on('players', updateNumPlayers)
@@ -111,12 +111,13 @@ require [
 
     # player
     game.physics.arcade.collide(player.sprite, level.platforms, hitWall)
+    game.physics.arcade.collide(player.sprite, level.boxes)
 
     game.physics.arcade.overlap(player.sprite, level.spikes, hitSpike, null, this)
     game.physics.arcade.overlap(player.sprite, level.baddies, hitBaddie, null, this)
     game.physics.arcade.overlap(player.sprite, level.exit, hitExit, null, this)
 
-    deathText.setText( "deaths: #{player.deaths}" )
+    deathText.setText( "Deaths: #{player.deaths}" )
 
     game.camera.follow(player.sprite)
 
@@ -141,8 +142,8 @@ require [
     game.stage.bounds.height = height
     game.camera.view.width = width
     game.camera.view.height = height
-    level.platforms.width = width
-    level.platforms.height = height
+    # level.platforms.width = width
+    # level.platforms.height = height
 
     if game.renderType is Phaser.WEBGL
       game.renderer.resize(width, height)

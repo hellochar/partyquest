@@ -1,12 +1,14 @@
 define [
   'jquery'
-], ($) ->
+  'underscore'
+], ($, _) ->
 
   class Player
     constructor: (@game) ->
       @sprite = null
       @deaths = 0
-      @speed = 1100
+      @tapVelocity = 650
+      @dragConst = .7
 
     preload: () ->
       @game.load.spritesheet('dude', 'images/dude.png', 32, 42)
@@ -16,12 +18,21 @@ define [
       @game.load.audio('death', 'audio/death.mp3')
 
     create: () ->
-      @sprite = @game.add.sprite(0, 0, "dude")
-      @sprite.anchor.set(0.5)
+      @reset()
+      @setupSockets()
+
+    reset: () =>
+      if @sprite
+        @sprite.destroy()
+      @sprite = @game.add.sprite(@game.level.spawnLocation.x, @game.level.spawnLocation.y, "dude")
       @sprite.smoothed = false
       @game.physics.arcade.enable(@sprite)
 
-      @sprite.body.collideWorldBounds = true
+      @sprite.body.maxVelocity.set(2000)
+
+      # for some reason this makes the player "bounce" off the world bounds when he gets reset (even though the sprite gets destroyed?!)
+      # so comment out for now
+      # @sprite.body.collideWorldBounds = true
 
       #  Our two animations, walking left and right.
       @sprite.animations.add("left", [0, 1, 2, 3], 10, true)
@@ -32,21 +43,19 @@ define [
         setTimeout(@reset, 1000)
       )
 
-      @setupSockets()
-
-      @reset()
-
-    reset: () =>
-      if @sprite
-        @sprite.reset(@game.level.spawnLocation.x, @game.level.spawnLocation.y)
-        @sprite.body.velocity.set(0)
-        @sprite.bringToTop()
-
     update: () ->
-      # @game.drag(@sprite, 0.5)
 
-      if Math.abs(@sprite.body.velocity.x) < 1
-        @sprite.body.velocity.x = 0
+      @sprite.position.clampX(@game.physics.arcade.bounds.x, @game.physics.arcade.bounds.right - @sprite.width)
+      @sprite.position.clampY(@game.physics.arcade.bounds.y, @game.physics.arcade.bounds.bottom - @sprite.height)
+
+      @game.drag(@sprite, @dragConst)
+      if not _.isFinite(@sprite.body.velocity.x) or
+         not _.isFinite(@sprite.body.velocity.y)
+        @sprite.body.velocity.set(0)
+
+
+
+      if Math.abs(@sprite.body.velocity.x) < 5
         @sprite.animations.stop()
         @sprite.frame = 4
       else if @sprite.body.velocity.x > 0
@@ -73,17 +82,17 @@ define [
 
     moveLeft: () =>
       #  Move to the left
-      @sprite.body.velocity.x += -@speed
+      @sprite.body.velocity.x += -@tapVelocity
       @fadeArrow(0)
 
     moveRight: () =>
-      @sprite.body.velocity.x += @speed
+      @sprite.body.velocity.x += @tapVelocity
       @fadeArrow(180)
 
     moveUp: () =>
-      @sprite.body.velocity.y += -@speed
+      @sprite.body.velocity.y += -@tapVelocity
       @fadeArrow(90)
 
     moveDown: () =>
-      @sprite.body.velocity.y += @speed
+      @sprite.body.velocity.y += @tapVelocity
       @fadeArrow(-90)
