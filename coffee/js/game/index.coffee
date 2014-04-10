@@ -66,7 +66,8 @@ require [
     game.physics.arcade.TILE_BIAS = 64
 
     # the level must be created before the player
-    overlay("Level 1")
+    # overlay("Level 1")
+    $("#overlay").hide()
     loadLevel(2)
     player.create()
 

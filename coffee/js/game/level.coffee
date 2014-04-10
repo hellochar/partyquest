@@ -64,16 +64,19 @@ define [
 
       # baddie
       game.physics.arcade.collide(@baddies, @platforms)
-      game.physics.arcade.collide(@baddies, @spikes)
       game.physics.arcade.collide(@baddies, @boxes)
       game.physics.arcade.collide(@baddies)
 
       # boxes
       game.physics.arcade.collide(@boxes)
-      game.physics.arcade.collide(@spikes, @boxes)
       game.physics.arcade.collide(@boxes, @platforms)
 
+      spikesCollide = (spike, other) ->
+        spike.collidedWith(other)
+
       #spikes
-      game.physics.arcade.collide(@spikes)
-      game.physics.arcade.collide(@spikes, @platforms)
+      game.physics.arcade.collide(@spikes, undefined, spikesCollide)
+      game.physics.arcade.collide(@spikes, @baddies, spikesCollide)
+      game.physics.arcade.collide(@spikes, @boxes, spikesCollide)
+      game.physics.arcade.collide(@spikes, @platforms, spikesCollide)
 

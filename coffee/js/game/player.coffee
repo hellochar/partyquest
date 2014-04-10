@@ -36,13 +36,14 @@ define [
 
       @reset()
 
-    reset: () ->
+    reset: () =>
       if @sprite
         @sprite.reset(@game.level.spawnLocation.x, @game.level.spawnLocation.y)
+        @sprite.body.velocity.set(0)
         @sprite.bringToTop()
 
     update: () ->
-      @game.drag(@sprite, 0.5)
+      # @game.drag(@sprite, 0.5)
 
       if Math.abs(@sprite.body.velocity.x) < 1
         @sprite.body.velocity.x = 0
