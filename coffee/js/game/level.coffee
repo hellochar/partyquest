@@ -1,8 +1,9 @@
 define [
   'game/baddie'
   'game/spike'
+  'game/box'
   'phaser'
-], (Baddie, Spike, Phaser) ->
+], (Baddie, Spike, Box, Phaser) ->
   class Level
     # @level = 1, 2, 3, etc.
     constructor: (@game, @num) ->
@@ -25,58 +26,57 @@ define [
       @spawnLocation = undefined
       @exit.destroy()
 
-    create: () ->
+    create: () =>
 
       @timeStarted = Date.now()
 
       @map = @game.add.tilemap("level#{@num}")
       @map.addTilesetImage('tilesheet')
-
-      @map.setCollision(28)
+      @map.setCollisionBetween(28, 28)
 
       @platforms = @map.createLayer('Tile Layer 1')
       @platforms.resizeWorld()
+      platformBodies = @game.physics.p2.convertTilemap(@map, @platforms)
+      # @platforms.collisionGroup = game.physics.p2.createCollisionGroup()
+      # for body in platformBodies
+      #   body.setCollisionGroup(@platforms.collisionGroup)
 
-      @spikes = game.add.group()
-      @spikes.enableBody = true
-      @map.createFromObjects('Spike Layer', 485, 'spike', undefined, undefined, undefined, @spikes, Spike)
+      createGroup = () =>
+        group = game.add.group()
+        # group.collisionGroup = game.physics.p2.createCollisionGroup()
+        group.enableBody = true
+        group.physicsBodyType = Phaser.Physics.P2JS
+        group
 
-      @boxes = game.add.group()
-      @boxes.enableBody = true
-      @map.createFromObjects('Box Layer', 486, 'box', undefined, undefined, undefined, @boxes)
-      @boxes.forEach(((sprite) -> sprite.body.y -= 32), null)
+      populateGroup = (group, layer, gid, spriteName, customClass, cb) =>
+        @map.createFromObjects(layer, gid, spriteName, undefined, undefined, undefined, group, customClass, false)
+        group.forEach((sprite) ->
+          # sprite.body.setCollisionGroup(group.collisionGroup)
+          # sprite.body.collides(commonCollisionGroups)
+          cb(sprite) if cb
+        )
 
-      @baddies = game.add.group()
-      @baddies.enableBody = true
-      @map.createFromObjects('Baddies', 488, 'baddie', undefined, undefined, undefined, @baddies, Baddie)
-      @baddies.forEach((baddie) ->
-        baddie.anchor.set(0.5)
-      )
+      @spikes = createGroup()
+      @boxes = createGroup()
+      @baddies = createGroup()
+
+      # commonCollisionGroups = [@spikes.collisionGroup, @boxes.collisionGroup, @baddies.collisionGroup, @platforms.collisionGroup]
+
+      populateGroup(@spikes, 'Spike Layer', 485, 'spike', Spike)
+      populateGroup(@boxes, 'Box Layer', 486, 'box', Box)
+      populateGroup(@baddies, 'Baddies', 488, 'baddie', Baddie)
 
       @spawnLocation = new Phaser.Point(@map.collision.Spawn[0].x, @map.collision.Spawn[0].y)
 
       @exit = game.add.sprite(@map.objects.Exit[0].x, @map.objects.Exit[0].y, 'exit')
-      @exit.anchor.setTo(0, 1)
-      @game.physics.arcade.enable(@exit)
+      @exit.x += @exit.width/2
+      @exit.y += @exit.height/2
+      @exit.y -= @exit.height
+      @game.physics.p2.enable(@exit)
+      @exit.body.motionState = 2
 
       @game.world.sendToBack(@platforms)
 
+      # @game.physics.p2.updateBoundsCollisionGroup()
+
     update: () =>
-      @boxes.forEach(@game.drag, null)
-      # @baddies.forEach(@game.debug.body, @game.debug)
-
-      # baddie
-      game.physics.arcade.collide(@baddies, @platforms)
-      game.physics.arcade.collide(@baddies, @spikes)
-      game.physics.arcade.collide(@baddies, @boxes)
-      game.physics.arcade.collide(@baddies)
-
-      # boxes
-      game.physics.arcade.collide(@boxes)
-      game.physics.arcade.collide(@spikes, @boxes)
-      game.physics.arcade.collide(@boxes, @platforms)
-
-      #spikes
-      game.physics.arcade.collide(@spikes)
-      game.physics.arcade.collide(@spikes, @platforms)
-

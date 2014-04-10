@@ -1,31 +1,51 @@
 define [
   'phaser'
 ], (Phaser) ->
+  MOVE_SPEED = 500
+
   class Spike extends Phaser.Sprite
     constructor: (game, x, y, key, frame) ->
       super(game, x, y, key, frame)
-      @anchor.set(0, 0)
-      @game.physics.arcade.enable(this)
-      @body.collideWorldBounds = true
+      # p2 forces the anchor to be at the center but x/y are top-left, so move the sprite
+      # such that the physics body is positioned correctly
+      @x += @width/2
+      @y += @height/2
+
+      @y -= @height
+      @game.physics.p2.enable(this)
+      @body.fixedRotation = true
+      @body.damping = 1 - (1e-10)
+
       setTimeout(() =>
         if @moves is "vertical"
-          # start it moving downward
-          @body.velocity.y += 200
-          @body.bounce.set(1)
+          @direction = "down"
         else if @moves is "horizontal"
-          @body.velocity.x += 200
-          @body.bounce.set(1)
+          @direction = "right"
       , 0)
 
     update: () =>
-      @game.drag(this)
-      if @moves is "vertical"
-        if @body.velocity.y > 0
-          @body.velocity.y += 200
-        else if @body.velocity.y < 0
-          @body.velocity.y -= 200
-      else if @moves is "horizontal"
-        if @body.velocity.x > 0
-          @body.velocity.x += 200
-        else if @body.velocity.x < 0
-          @body.velocity.x -= 200
+      switch @direction
+        when "down"
+          if @body.velocity.y < -1
+            @body.moveDown(MOVE_SPEED)
+          else
+            @direction = "up"
+            @body.moveUp(MOVE_SPEED)
+        when "up"
+          if @body.velocity.y > 1
+            @body.moveUp(MOVE_SPEED)
+          else
+            @direction = "down"
+            @body.moveDown(MOVE_SPEED)
+        when "left"
+          if @body.velocity.x > 1
+            @body.moveLeft(MOVE_SPEED)
+          else
+            @direction = "right"
+            @body.moveRight(MOVE_SPEED)
+        when "right"
+          if @body.velocity.x < -1
+            @body.moveRight(MOVE_SPEED)
+          else
+            @direction = "left"
+            @body.moveLeft(MOVE_SPEED)

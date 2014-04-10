@@ -67,15 +67,17 @@ require [
   create = ->
     game.antialias = false
     game.stage.disableVisibilityChange = true
+    game.paused = false
 
-    #  We're going to be using physics, so enable the Arcade Physics system
-    game.physics.startSystem(Phaser.Physics.ARCADE)
-    game.physics.arcade.TILE_BIAS = 64
+    game.physics.startSystem(Phaser.Physics.P2JS)
+    game.physics.p2.setImpactEvents(true)
+    game.physics.p2.defaultRestitution = 5.0
 
     # the level must be created before the player
     overlay("Level 1")
     # $("#overlay").hide()
-    loadLevel(2)
+    loadLevel(1)
+
     player.create()
 
     style = {font: "20pt Arial", fill: "white", align: "left" }
@@ -113,6 +115,8 @@ require [
 
       timeText.setText( formattime((Date.now() - game.level.timeStarted) / 1000 | 0) )
 
+    # game.physics.p2.updateBoundsCollisionGroup()
+
     socket.on('players', updateNumPlayers)
 
   update = ->
@@ -142,12 +146,14 @@ require [
         , 1000)
 
     # player
-    game.physics.arcade.collide(player.sprite, level.platforms, hitWall)
-    game.physics.arcade.collide(player.sprite, level.boxes)
+    # player.sprite.body.collides(level.platforms.collisionGroup, hitWall, this)
+    # level.spikes.forEach((spike) -> spike.body.collides(player.sprite.body))
+    # player.sprite.body.collides(level.boxes.collisionGroup)
+    # player.sprite.body.collides(level.spikes.collisionGroup)
 
-    game.physics.arcade.overlap(player.sprite, level.spikes, hitSpike, null, this)
-    game.physics.arcade.overlap(player.sprite, level.baddies, hitBaddie, null, this)
-    game.physics.arcade.overlap(player.sprite, level.exit, hitExit, null, this)
+    # game.physics.arcade.overlap(player.sprite, level.spikes, hitSpike, null, this)
+    # game.physics.arcade.overlap(player.sprite, level.baddies, hitBaddie, null, this)
+    # game.physics.arcade.overlap(player.sprite, level.exit, hitExit, null, this)
 
     game.camera.follow(player.sprite)
 
@@ -157,9 +163,6 @@ require [
     update: update
   )
   game.socket = socket
-
-  game.drag = (sprite, amount = 0.5) ->
-    sprite.body.velocity.setMagnitude(sprite.body.velocity.getMagnitude() * amount)
 
   window.game = game
 

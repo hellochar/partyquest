@@ -7,8 +7,7 @@ define [
     constructor: (@game) ->
       @sprite = null
       @deaths = 0
-      @tapVelocity = 650
-      @dragConst = .7
+      @tapVelocity = 1500
 
     preload: () ->
       @game.load.spritesheet('dude', 'images/dude.png', 32, 42)
@@ -25,10 +24,12 @@ define [
       if @sprite
         @sprite.destroy()
       @sprite = @game.add.sprite(@game.level.spawnLocation.x, @game.level.spawnLocation.y, "dude")
+      @sprite.x += @sprite.width/2
+      @sprite.y += @sprite.height/2
       @sprite.smoothed = false
-      @game.physics.arcade.enable(@sprite)
-
-      @sprite.body.maxVelocity.set(2000)
+      @game.physics.p2.enable(@sprite)
+      @sprite.body.damping = 1 - (1e-12)
+      @sprite.body.fixedRotation = true
 
       # for some reason this makes the player "bounce" off the world bounds when he gets reset (even though the sprite gets destroyed?!)
       # so comment out for now
@@ -44,23 +45,21 @@ define [
       )
 
     update: () ->
+      # @sprite.position.clampX(@game.physics.arcade.bounds.x, @game.physics.arcade.bounds.right - @sprite.width)
+      # @sprite.position.clampY(@game.physics.arcade.bounds.y, @game.physics.arcade.bounds.bottom - @sprite.height)
 
-      @sprite.position.clampX(@game.physics.arcade.bounds.x, @game.physics.arcade.bounds.right - @sprite.width)
-      @sprite.position.clampY(@game.physics.arcade.bounds.y, @game.physics.arcade.bounds.bottom - @sprite.height)
-
-      @game.drag(@sprite, @dragConst)
       if not _.isFinite(@sprite.body.velocity.x) or
          not _.isFinite(@sprite.body.velocity.y)
-        @sprite.body.velocity.set(0)
+        @sprite.body.velocity.x = @sprite.body.velocity.y = 0
 
 
 
-      if Math.abs(@sprite.body.velocity.x) < 5
+      if Math.abs(@sprite.body.velocity.x) < 1
         @sprite.animations.stop()
         @sprite.frame = 4
-      else if @sprite.body.velocity.x > 0
-        @sprite.animations.play('right')
       else if @sprite.body.velocity.x < 0
+        @sprite.animations.play('right')
+      else if @sprite.body.velocity.x > 0
         @sprite.animations.play('left')
 
     setupSockets: () =>
