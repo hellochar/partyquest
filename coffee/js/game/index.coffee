@@ -39,6 +39,13 @@ require [
         player.reset()
 
   preload = ->
+
+    # game.load.onLoadComplete.add(() -> debugger)
+    game.load.onFileComplete.add(() -> console.log("loaded", arguments, "("+game.load.progress+")"))
+    game.load.onFileError.add(() -> console.log("error loading", arguments, "("+game.load.progress+")"))
+
+    console.log("preloaded!")
+
     level = new Level(game, 0)
     level.preload()
     game.level = level
@@ -144,6 +151,7 @@ require [
     game.camera.view.height = height
     # level.platforms.width = width
     # level.platforms.height = height
+    # level.platforms.updateMax()
 
     if game.renderType is Phaser.WEBGL
       game.renderer.resize(width, height)

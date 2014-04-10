@@ -30,7 +30,6 @@ define [
 
       @map.setCollision(28)
 
-      # hack; fix this later
       @platforms = @map.createLayer('Tile Layer 1')
       @platforms.resizeWorld()
 
