@@ -16,7 +16,7 @@ define [
       @game.load.audio('death', 'audio/death.mp3')
 
     create: () ->
-      @sprite = @game.add.sprite(@game.level.spawnLocation.x, @game.level.spawnLocation.y, "dude")
+      @sprite = @game.add.sprite(0, 0, "dude")
       @sprite.anchor.set(0.5)
       @sprite.smoothed = false
       @game.physics.arcade.enable(@sprite)
@@ -29,11 +29,17 @@ define [
       @sprite.events.onKilled.add(() =>
         @game.sound.play('death')
         @deaths += 1
-        setTimeout(() =>
-          @sprite.reset(@game.level.spawnLocation.x, @game.level.spawnLocation.y)
-        , 1000)
+        setTimeout(@reset, 1000)
       )
+
       @setupSockets()
+
+      @reset()
+
+    reset: () ->
+      if @sprite
+        @sprite.reset(@game.level.spawnLocation.x, @game.level.spawnLocation.y)
+        @sprite.bringToTop()
 
     update: () ->
       @game.drag(@sprite, 0.5)

@@ -7,7 +7,16 @@ require [
   'game/player'
 ], ($, io, Phaser, Level, DemoLevel, Player) ->
 
-  $("#overlay").hide()
+  overlay = (text) ->
+    $("#overlay").fadeIn(1000).text(text)
+    setTimeout(() ->
+      $("#overlay").fadeOut(1000)
+    , 1000)
+
+  level = undefined
+  player = undefined
+  deathText = null
+  numPlayersText = null
 
   socket = io.connect('/game')
 
@@ -16,13 +25,21 @@ require [
   updateNumPlayers = (num) ->
     numPlayersText.setText("Players: #{num}")
 
-  level = undefined
-  player = undefined
-  deathText = null
-  numPlayersText = null
+
+  loadLevel = (num) ->
+    console.log("loading level #{num}")
+    if level.num != num
+      if level.map
+        level.destroy()
+      level = new Level(game, num)
+      game.sound.play('drum_tom')
+      game.level = level
+      level.create()
+      if player
+        player.reset()
 
   preload = ->
-    level = new Level(game)
+    level = new Level(game, 0)
     level.preload()
     game.level = level
 
@@ -36,6 +53,8 @@ require [
     game.load.audio('hit-wall', 'audio/Hit_Wall.wav')
     game.load.audio('hit-spike', 'audio/Hit_Spike.wav')
     game.load.audio('pig_grunt', 'audio/pig_grunt.mp3')
+    game.load.audio('drum_tom', 'audio/drum_tom.mp3')
+    game.load.audio('crowd_applause', 'audio/crowd_applause.mp3')
 
 
   create = ->
@@ -47,7 +66,8 @@ require [
     game.physics.arcade.TILE_BIAS = 64
 
     # the level must be created before the player
-    level.create()
+    overlay("Level 1")
+    loadLevel(2)
     player.create()
 
     style = {font: "20pt Arial", fill: "white", align: "left" }
@@ -73,31 +93,23 @@ require [
       player.kill()
       game.sound.play('hit-spike')
 
-    hitBaddie = (player, wall) ->
+    hitBaddie = (player, baddie) ->
       player.kill()
       game.sound.play('pig_grunt')
 
-    hitExit = (player, wall) ->
-      $("#overlay").fadeIn(1000).text("you win!")
+    hitExit = (player, exit) ->
+      if not level.finished
+        level.finished = true
+        game.sound.play('crowd_applause')
+        game.sound.play('Pickup_Coin')
+        currentLevel = level.num
+        overlay("Level #{currentLevel + 1}")
+        setTimeout(() ->
+          loadLevel(currentLevel + 1)
+        , 1000)
 
     # player
     game.physics.arcade.collide(player.sprite, level.platforms, hitWall)
-
-    game.physics.arcade.collide(level.spikes)
-    game.physics.arcade.collide(level.spikes, level.platforms)
-
-    # boxes
-    game.physics.arcade.collide(level.boxes)
-    game.physics.arcade.collide(level.spikes, level.boxes)
-    game.physics.arcade.collide(level.boxes, level.platforms)
-
-    # baddie
-    game.physics.arcade.collide(level.baddies, level.platforms)
-    game.physics.arcade.collide(level.baddies, level.spikes)
-    game.physics.arcade.collide(level.baddies, level.boxes)
-    game.physics.arcade.collide(level.baddies)
-
-    level.baddies.forEach(game.debug.body, game.debug)
 
     game.physics.arcade.overlap(player.sprite, level.spikes, hitSpike, null, this)
     game.physics.arcade.overlap(player.sprite, level.baddies, hitBaddie, null, this)

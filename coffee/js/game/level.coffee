@@ -1,20 +1,31 @@
 define [
   'game/baddie'
+  'game/spike'
   'phaser'
-], (Baddie, Phaser) ->
+], (Baddie, Spike, Phaser) ->
   class Level
-    constructor: (@game) ->
+    # @level = 1, 2, 3, etc.
+    constructor: (@game, @num) ->
 
     preload: () ->
       @game.load.tilemap('level1', 'maps/lvl1.json', null, Phaser.Tilemap.TILED_JSON)
+      @game.load.tilemap('level2', 'maps/lvl2.json', null, Phaser.Tilemap.TILED_JSON)
       @game.load.image('tilesheet', 'images/tilesheet.png')
       @game.load.image('spike', 'images/spike.png')
       @game.load.image('box', 'images/box.png')
       @game.load.image('exit', 'images/exit.png')
 
-    create: () ->
+    destroy: () ->
+      @map.destroy()
+      @platforms.destroy()
+      @spikes.destroy()
+      @boxes.destroy()
+      @baddies.destroy()
+      @spawnLocation = undefined
+      @exit.destroy()
 
-      @map = @game.add.tilemap('level1')
+    create: () ->
+      @map = @game.add.tilemap("level#{@num}")
       @map.addTilesetImage('tilesheet')
 
       @map.setCollision(28)
@@ -25,8 +36,7 @@ define [
 
       @spikes = game.add.group()
       @spikes.enableBody = true
-      @map.createFromObjects('Spike Layer', 485, 'spike', undefined, undefined, undefined, @spikes)
-      @spikes.forEach(((sprite) -> sprite.body.y -= 32), null)
+      @map.createFromObjects('Spike Layer', 485, 'spike', undefined, undefined, undefined, @spikes, Spike)
 
       @boxes = game.add.group()
       @boxes.enableBody = true
@@ -40,13 +50,30 @@ define [
         baddie.anchor.set(0.5)
       )
 
-      @spawnLocation = new Phaser.Point(@map.collision.Spawn[0].x, @map.collision.Spawn[0].y)
+      @spawnLocation = new Phaser.Point(@map.collision.Spawn[0].x + 16, @map.collision.Spawn[0].y + 16)
 
       @exit = game.add.sprite(@map.objects.Exit[0].x, @map.objects.Exit[0].y, 'exit')
+      @exit.anchor.setTo(0, 1)
       @game.physics.arcade.enable(@exit)
-      @exit.body.y -= @exit.body.height
 
     update: () =>
-      @spikes.forEach(@game.drag, null)
+      @spikes.forEach((spike) -> spike.update())
       @boxes.forEach(@game.drag, null)
       @baddies.forEach((baddie) -> baddie.update())
+      @baddies.forEach(@game.debug.body, @game.debug)
+
+      # baddie
+      game.physics.arcade.collide(@baddies, @platforms)
+      game.physics.arcade.collide(@baddies, @spikes)
+      game.physics.arcade.collide(@baddies, @boxes)
+      game.physics.arcade.collide(@baddies)
+
+      # boxes
+      game.physics.arcade.collide(@boxes)
+      game.physics.arcade.collide(@spikes, @boxes)
+      game.physics.arcade.collide(@boxes, @platforms)
+
+      #spikes
+      game.physics.arcade.collide(@spikes)
+      game.physics.arcade.collide(@spikes, @platforms)
+
