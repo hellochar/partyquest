@@ -1,11 +1,12 @@
 require [
   'jquery'
+  'underscore'
   "socket.io"
   'phaser'
   'game/level'
   'game/demolevel'
   'game/player'
-], ($, io, Phaser, Level, DemoLevel, Player) ->
+], ($, _, io, Phaser, Level, DemoLevel, Player) ->
 
   overlay = (text) ->
     $("#overlay").fadeIn(1000).text(text)
@@ -17,10 +18,9 @@ require [
   player = undefined
   deathText = null
   numPlayersText = null
+  timeText = null
 
   socket = io.connect('/game')
-
-  timeStarted = Date.now()
 
   updateNumPlayers = (num) ->
     numPlayersText.setText("Players: #{num}")
@@ -75,18 +75,43 @@ require [
     # the level must be created before the player
     overlay("Level 1")
     # $("#overlay").hide()
-    loadLevel(1)
+    loadLevel(2)
     player.create()
 
     style = {font: "20pt Arial", fill: "white", align: "left" }
     deathText = game.add.text(0, 0, "", style)
     deathText.fixedToCamera = true
     deathText.cameraOffset.setTo(0, 0)
+    deathText.update = () ->
+      deathText.setText( "Deaths: #{player.deaths}" )
 
     numPlayersText = game.add.text(0, 0, "", style)
     numPlayersText.fixedToCamera = true
     numPlayersText.cameraOffset.setTo(0, 24)
     updateNumPlayers("???")
+
+    timeText = game.add.text(0, 0, "", _.extend(style, align: "center"))
+    timeText.fixedToCamera = true
+    timeText.cameraOffset.setTo(game.width / 2, 0)
+    timeText.update = () ->
+      formattime = (numberofseconds) ->
+        zero = '0'
+        time = new Date(0, 0, 0, 0, 0, numberofseconds, 0)
+        hh = time.getHours()
+        mm = time.getMinutes()
+        ss = time.getSeconds()
+
+        # Pad zero values to 00
+        hh = (zero+hh).slice(-2)
+        mm = (zero+mm).slice(-2)
+        ss = (zero+ss).slice(-2)
+
+        if hh > 0
+          hh + ':' + mm + ':' + ss
+        else
+          mm + ':' + ss
+
+      timeText.setText( formattime((Date.now() - game.level.timeStarted) / 1000 | 0) )
 
     socket.on('players', updateNumPlayers)
 
@@ -123,8 +148,6 @@ require [
     game.physics.arcade.overlap(player.sprite, level.spikes, hitSpike, null, this)
     game.physics.arcade.overlap(player.sprite, level.baddies, hitBaddie, null, this)
     game.physics.arcade.overlap(player.sprite, level.exit, hitExit, null, this)
-
-    deathText.setText( "Deaths: #{player.deaths}" )
 
     game.camera.follow(player.sprite)
 

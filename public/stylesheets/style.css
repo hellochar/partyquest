@@ -24,6 +24,7 @@ html, body, .spans {
   color: white;
   font-size: 10em;
   z-index: 1;
+  text-align: center;
 }
 
 .spans .arrow {

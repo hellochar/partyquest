@@ -6,6 +6,7 @@ define [
   class Level
     # @level = 1, 2, 3, etc.
     constructor: (@game, @num) ->
+      @timeStarted = Date.now()
 
     preload: () ->
       @game.load.tilemap('level1', 'maps/lvl1.json', null, Phaser.Tilemap.TILED_JSON)
@@ -25,6 +26,9 @@ define [
       @exit.destroy()
 
     create: () ->
+
+      @timeStarted = Date.now()
+
       @map = @game.add.tilemap("level#{@num}")
       @map.addTilesetImage('tilesheet')
 
@@ -55,11 +59,11 @@ define [
       @exit.anchor.setTo(0, 1)
       @game.physics.arcade.enable(@exit)
 
+      @game.world.sendToBack(@platforms)
+
     update: () =>
-      @spikes.forEach((spike) -> spike.update())
       @boxes.forEach(@game.drag, null)
-      @baddies.forEach((baddie) -> baddie.update())
-      @baddies.forEach(@game.debug.body, @game.debug)
+      # @baddies.forEach(@game.debug.body, @game.debug)
 
       # baddie
       game.physics.arcade.collide(@baddies, @platforms)

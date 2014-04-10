@@ -12,6 +12,9 @@ define [
           # start it moving downward
           @body.velocity.y += 200
           @body.bounce.set(1)
+        else if @moves is "horizontal"
+          @body.velocity.x += 200
+          @body.bounce.set(1)
       , 0)
 
     update: () =>
@@ -21,3 +24,8 @@ define [
           @body.velocity.y += 200
         else if @body.velocity.y < 0
           @body.velocity.y -= 200
+      else if @moves is "horizontal"
+        if @body.velocity.x > 0
+          @body.velocity.x += 200
+        else if @body.velocity.x < 0
+          @body.velocity.x -= 200
