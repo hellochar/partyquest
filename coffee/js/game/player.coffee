@@ -1,7 +1,9 @@
 define [
   'jquery'
   'underscore'
-], ($, _) ->
+  'phaser'
+  'game/spike'
+], ($, _, Phaser, Spike) ->
 
   class Player
     constructor: (@game) ->
@@ -15,10 +17,21 @@ define [
 
       @game.load.audio('move', 'audio/Move.wav')
       @game.load.audio('death', 'audio/death.mp3')
+      @game.load.audio('hit-spike', 'audio/Hit_Spike.wav')
+      @game.load.audio('pig_grunt', 'audio/pig_grunt.mp3')
 
     create: () ->
       @reset()
       @setupSockets()
+
+    hitSpike: (spike) ->
+      @sprite.kill()
+      @game.sound.play('hit-spike')
+
+    hitBaddie: (baddie) ->
+      @sprite.kill()
+      @game.sound.play('pig_grunt')
+      baddie.kill()
 
     reset: () =>
       if @sprite
@@ -26,10 +39,15 @@ define [
       @sprite = @game.add.sprite(@game.level.spawnLocation.x, @game.level.spawnLocation.y, "dude")
       @sprite.x += @sprite.width/2
       @sprite.y += @sprite.height/2
+      @sprite.player = this
       @sprite.smoothed = false
       @game.physics.p2.enable(@sprite)
       @sprite.body.damping = 1 - (1e-12)
       @sprite.body.fixedRotation = true
+
+      # @sprite.body.onImpact.add(() ->
+      #   debugger
+      # )
 
       # for some reason this makes the player "bounce" off the world bounds when he gets reset (even though the sprite gets destroyed?!)
       # so comment out for now

@@ -152,5 +152,8 @@
   <object gid="486" x="672" y="288"/>
   <object gid="486" x="704" y="320"/>
  </objectgroup>
- <objectgroup name="Baddies" width="69" height="28"/>
+ <objectgroup name="Baddies" width="69" height="28">
+  <object gid="488" x="416" y="288"/>
+  <object gid="488" x="736" y="512"/>
+ </objectgroup>
 </map>

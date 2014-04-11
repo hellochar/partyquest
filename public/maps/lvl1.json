@@ -1352,7 +1352,35 @@
         {
          "height":28,
          "name":"Baddies",
-         "objects":[],
+         "objects":[
+                {
+                 "gid":488,
+                 "height":0,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":416,
+                 "y":288
+                }, 
+                {
+                 "gid":488,
+                 "height":0,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":736,
+                 "y":512
+                }],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,

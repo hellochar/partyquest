@@ -219,7 +219,7 @@
   <object gid="484" x="192" y="736"/>
  </objectgroup>
  <objectgroup name="Spawn" width="60" height="60">
-  <object x="1472" y="1664">
+  <object x="128" y="320">
    <polyline points="0,0 0,32 32,32 32,0 0,0"/>
   </object>
  </objectgroup>

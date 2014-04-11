@@ -4,9 +4,10 @@ require [
   "socket.io"
   'phaser'
   'game/level'
-  'game/demolevel'
+  'game/spike'
+  'game/baddie'
   'game/player'
-], ($, _, io, Phaser, Level, DemoLevel, Player) ->
+], ($, _, io, Phaser, Level, Spike, Baddie, Player) ->
 
   overlay = (text) ->
     $("#overlay").fadeIn(1000).text(text)
@@ -38,13 +39,46 @@ require [
       if player
         player.reset()
 
-  preload = ->
 
-    # game.load.onLoadComplete.add(() -> debugger)
+  broadphaseFilter = (body1, body2) ->
+    [hasPlayer, sprite] =
+      if body1.sprite?.player
+        [true, body2.sprite]
+      else if body2.sprite?.player
+        [true, body1.sprite]
+      else
+        [false, null]
+
+    if hasPlayer
+      if sprite instanceof Spike
+        player.hitSpike(sprite)
+        return false
+      if sprite instanceof Baddie
+        player.hitBaddie(sprite)
+        return false
+      if sprite is game.level.exit
+        hitExit()
+        return false
+      else
+        return true
+    else
+      return true
+
+  hitExit = () ->
+    if not level.finished
+      level.finished = true
+      game.sound.play('crowd_applause')
+      game.sound.play('Pickup_Coin')
+      currentLevel = level.num
+      overlay("Level #{currentLevel + 1}")
+      setTimeout(() ->
+        loadLevel(currentLevel + 1)
+      , 1000)
+
+
+  preload = ->
     game.load.onFileComplete.add(() -> console.log("loaded", arguments, "("+game.load.progress+")"))
     game.load.onFileError.add(() -> console.log("error loading", arguments, "("+game.load.progress+")"))
-
-    console.log("preloaded!")
 
     level = new Level(game, 0)
     level.preload()
@@ -57,8 +91,6 @@ require [
     game.load.spritesheet('baddie', 'images/baddie.png', 32, 32)
 
     game.load.audio('pickup-coin', 'audio/Pickup_Coin.wav')
-    game.load.audio('hit-wall', 'audio/Hit_Wall.wav')
-    game.load.audio('hit-spike', 'audio/Hit_Spike.wav')
     game.load.audio('pig_grunt', 'audio/pig_grunt.mp3')
     game.load.audio('drum_tom', 'audio/drum_tom.mp3')
     game.load.audio('crowd_applause', 'audio/crowd_applause.mp3')
@@ -72,6 +104,7 @@ require [
     game.physics.startSystem(Phaser.Physics.P2JS)
     game.physics.p2.setImpactEvents(true)
     game.physics.p2.defaultRestitution = 5.0
+    game.physics.p2.setPostBroadphaseCallback(broadphaseFilter, this)
 
     # the level must be created before the player
     overlay("Level 1")
@@ -122,28 +155,6 @@ require [
   update = ->
     level.update()
     player.update()
-
-    hitWall = (player, wall) ->
-      game.sound.play('hit-wall')
-
-    hitSpike = (player, spike) ->
-      player.kill()
-      game.sound.play('hit-spike')
-
-    hitBaddie = (player, baddie) ->
-      player.kill()
-      game.sound.play('pig_grunt')
-
-    hitExit = (player, exit) ->
-      if not level.finished
-        level.finished = true
-        game.sound.play('crowd_applause')
-        game.sound.play('Pickup_Coin')
-        currentLevel = level.num
-        overlay("Level #{currentLevel + 1}")
-        setTimeout(() ->
-          loadLevel(currentLevel + 1)
-        , 1000)
 
     # player
     # player.sprite.body.collides(level.platforms.collisionGroup, hitWall, this)
