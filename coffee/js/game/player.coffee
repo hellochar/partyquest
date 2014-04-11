@@ -18,7 +18,6 @@ define [
       @game.load.audio('move', 'audio/Move.wav')
       @game.load.audio('death', 'audio/death.mp3')
       @game.load.audio('hit-spike', 'audio/Hit_Spike.wav')
-      @game.load.audio('pig_grunt', 'audio/pig_grunt.mp3')
 
     create: () ->
       @reset()
@@ -30,8 +29,6 @@ define [
 
     hitBaddie: (baddie) ->
       @sprite.kill()
-      @game.sound.play('pig_grunt')
-      baddie.kill()
 
     reset: () =>
       if @sprite

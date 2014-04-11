@@ -55,6 +55,7 @@ require [
         return false
       if sprite instanceof Baddie
         player.hitBaddie(sprite)
+        sprite.hitPlayer(player)
         return false
       if sprite is game.level.exit
         hitExit()
@@ -89,11 +90,14 @@ require [
     game.player = player
 
     game.load.spritesheet('baddie', 'images/baddie.png', 32, 32)
+    game.load.spritesheet('explosion', 'images/explosion.png', 64, 64)
+    game.load.image('explosion_residue', 'images/explosion_residue.png')
 
     game.load.audio('pickup-coin', 'audio/Pickup_Coin.wav')
     game.load.audio('pig_grunt', 'audio/pig_grunt.mp3')
     game.load.audio('drum_tom', 'audio/drum_tom.mp3')
     game.load.audio('crowd_applause', 'audio/crowd_applause.mp3')
+    game.load.audio('explosion_audio', 'audio/explosion.mp3')
 
 
   create = ->
