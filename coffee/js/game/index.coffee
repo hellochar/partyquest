@@ -95,6 +95,7 @@ require [
 
     game.load.audio('pickup-coin', 'audio/Pickup_Coin.wav')
     game.load.audio('pig_grunt', 'audio/pig_grunt.mp3')
+    game.load.audio('pig_squeal', 'audio/pig_squeal.mp3')
     game.load.audio('drum_tom', 'audio/drum_tom.mp3')
     game.load.audio('crowd_applause', 'audio/crowd_applause.mp3')
     game.load.audio('explosion_audio', 'audio/explosion.mp3')
