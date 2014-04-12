@@ -15,6 +15,7 @@ var require = {
         seedrandom: ['vendor/seedrandom'],
         'socket.io': ['/socket.io/socket.io'],
         stats: ['vendor/stats'],
+        tapjs: "vendor/tap.js/tap",
         underscore: ['vendor/underscore/underscore'],
 
     },
@@ -43,6 +44,9 @@ var require = {
         },
         stats: {
             exports: 'Stats'
+        },
+        tapjs: {
+            exports: "Tap"
         },
         underscore: {
             exports: '_'

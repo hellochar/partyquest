@@ -1,7 +1,8 @@
 require [
   'jquery'
+  'tapjs'
   "socket.io"
-], ($, io) ->
+], ($, Tap, io) ->
 
   socket = io.connect('/controller')
 
@@ -14,7 +15,10 @@ require [
     , 60)
 
   registerDirection = (direction) ->
-    $(".arrow.#{direction}").click((evt) ->
+    el = $(".arrow.#{direction}")[0]
+    t = new Tap(el)
+
+    el.addEventListener('tap', (evt) ->
       press(direction)
     )
 

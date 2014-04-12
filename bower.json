@@ -16,7 +16,7 @@
   "dependencies": {
     "normalize.css": "~3.0.1",
     "bootstrap": "~3.1.1",
-    "phaser": "~2.0.0",
-    "underscore": "~1.6.0"
+    "underscore": "~1.6.0",
+    "tap.js": "~2.0.0"
   }
 }
