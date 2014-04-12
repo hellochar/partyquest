@@ -18,8 +18,7 @@ var require = {
         'socket.io': ['/socket.io/socket.io'],
         stats: ['vendor/stats'],
         tapjs: "vendor/tap.js/tap",
-        underscore: ['vendor/underscore/underscore'],
-
+        underscore: ['vendor/underscore/underscore']
     },
     shim: {
         box2d: {
@@ -53,7 +52,7 @@ var require = {
         },
         underscore: {
             exports: '_'
-        },
+        }
     }
 };
 

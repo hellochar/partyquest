@@ -36,4 +36,19 @@ require [
 
   registerDirection(dir) for dir in ['left', 'right', 'up', 'down']
 
+  setButtonSize = ->
+    wWidth = $(".spans").width()
+    wHeight = $(".spans").height()
+    fontSize = Math.min(wWidth, wHeight) * 0.3 | 0
+    buttonWidth = fontSize * 1.3 | 0
+    buttonHeight = fontSize * 1.3 | 0
+    $(".spans").css("font-size", fontSize + "px")
+    $(".spans .arrow").css(
+      width: buttonWidth
+      height: buttonHeight
+    )
+
+  $(window).resize setButtonSize
+  setButtonSize()
+
   FastClick.attach(document.body)

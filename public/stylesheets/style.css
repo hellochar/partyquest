@@ -3,19 +3,6 @@ html, body, .spans {
   height: 100%;
 }
 
-.spans {
-  font-size: 40vmin;
-}
-
-.centered {
-  position: absolute;
-  margin: auto;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-}
-
 #overlay {
   position: absolute;
   width: 100%;
@@ -27,6 +14,9 @@ html, body, .spans {
   text-align: center;
 }
 
+.spans {
+}
+
 .spans .arrow {
   position: absolute;
   margin: auto;
@@ -34,14 +24,16 @@ html, body, .spans {
   left: 0;
   right: 0;
   bottom: 0;
-  height: 40vmin;
-  width: 40vmin;
+  display: inline-block;
+  background-color: #ddd;
+  text-align: center;
+  border-radius: 1em;
 }
 
-/* .spans .arrow:active { */
-/*   color: orange; */
-/* } */
-/*  */
+.arrow span {
+    margin:auto;
+}
+
 .spans .left {
   right: initial;
 }
