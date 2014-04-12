@@ -8,7 +8,9 @@ var require = {
         "dat.gui": 'vendor/dat.gui',
         'canvasquery.framework': ['vendor/canvasquery.framework'],
         handlebars: ['vendor/handlebars/handlebars.runtime.amd'],
+        fastclick: "vendor/fastclick/lib/fastclick",
         jquery: ['vendor/jquery-1.9.1.min', '//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min'],
+        "jquery.color": "vendor/jquery.color-2.1.2",
         noise: ['vendor/noise'],
         pathfinding: ['vendor/PathFinding.js/lib/pathfinding-browser'],
         phaser: ['vendor/phaser'],
@@ -33,6 +35,7 @@ var require = {
         "dat.gui": {
             exports: 'dat'
         },
+        "jquery.color": ["jquery"],
         noise: {
             exports: 'ClassicalNoise'
         },

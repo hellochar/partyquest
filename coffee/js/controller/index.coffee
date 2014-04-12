@@ -2,7 +2,9 @@ require [
   'jquery'
   'tapjs'
   "socket.io"
-], ($, Tap, io) ->
+  "fastclick"
+  'jquery.color'
+], ($, Tap, io, FastClick) ->
 
   socket = io.connect('/controller')
 
@@ -10,9 +12,10 @@ require [
     socket.emit(direction)
     arrow = $(".arrow.#{direction}")
     arrow.css("color", "orange")
-    setTimeout(() ->
-      arrow.css("color", "")
-    , 60)
+    arrow.animate({
+      color: "#333"
+    }, 100, "linear")
+    $("body").append(direction+" ")
 
   registerDirection = (direction) ->
     el = $(".arrow.#{direction}")[0]
@@ -34,4 +37,4 @@ require [
 
   registerDirection(dir) for dir in ['left', 'right', 'up', 'down']
 
-
+  FastClick.attach(document.body)
