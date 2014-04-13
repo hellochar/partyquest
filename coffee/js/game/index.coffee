@@ -99,12 +99,23 @@ require [
     game.load.audio('drum_tom', 'audio/drum_tom.mp3')
     game.load.audio('crowd_applause', 'audio/crowd_applause.mp3')
     game.load.audio('explosion_audio', 'audio/explosion.mp3')
+    game.load.audio('spike_hit_wall', 'audio/spike_hit_wall.mp3')
+    game.load.audio('saw', 'audio/saw.mp3')
 
 
   create = ->
     game.antialias = false
     game.stage.disableVisibilityChange = true
     game.paused = false
+
+    # press 1-9 to quickly go to level 1-9
+    for i in [1..9]
+      ((i) ->
+        key = game.input.keyboard.addKey(48 + i) # 48 == keyCode for 0, 49 == keyCode for 1, etc.
+        key.onDown.add(() -> 
+          loadLevel(i)
+        )
+      )(i)
 
     game.physics.startSystem(Phaser.Physics.P2JS)
     game.physics.p2.setImpactEvents(true)

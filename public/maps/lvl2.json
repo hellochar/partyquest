@@ -40,36 +40,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":736,
-                 "y":224
-                }, 
-                {
-                 "gid":485,
-                 "height":0,
-                 "name":"",
-                 "properties":
-                    {
-                     "moves":"vertical"
-                    },
-                 "type":"",
-                 "visible":true,
-                 "width":0,
                  "x":608,
                  "y":192
-                }, 
-                {
-                 "gid":485,
-                 "height":0,
-                 "name":"",
-                 "properties":
-                    {
-                     "moves":"vertical"
-                    },
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":480,
-                 "y":160
                 }, 
                 {
                  "gid":485,
@@ -110,50 +82,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":992,
-                 "y":288
-                }, 
-                {
-                 "gid":485,
-                 "height":0,
-                 "name":"",
-                 "properties":
-                    {
-                     "moves":"vertical"
-                    },
-                 "type":"",
-                 "visible":true,
-                 "width":0,
                  "x":1120,
                  "y":320
-                }, 
-                {
-                 "gid":485,
-                 "height":0,
-                 "name":"",
-                 "properties":
-                    {
-                     "moves":"vertical"
-                    },
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":1504,
-                 "y":416
-                }, 
-                {
-                 "gid":485,
-                 "height":0,
-                 "name":"",
-                 "properties":
-                    {
-                     "moves":"vertical"
-                    },
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":1248,
-                 "y":352
                 }, 
                 {
                  "gid":485,

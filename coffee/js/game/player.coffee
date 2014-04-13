@@ -59,6 +59,14 @@ define [
         setTimeout(@reset, 1000)
       )
 
+    volumeFor: (sprite) ->
+      # pixel distance - things more than 1 screen away should be only 10% volume
+      # screen is about ~1500 pixels
+      # near to you (within .25 of a screen) = ~400 pixels should still be full volume
+      dist = sprite.position.distance(@sprite.position)
+
+      @game.math.clamp(100 / dist - .1, 0, 1)
+
     update: () ->
       # @sprite.position.clampX(@game.physics.arcade.bounds.x, @game.physics.arcade.bounds.right - @sprite.width)
       # @sprite.position.clampY(@game.physics.arcade.bounds.y, @game.physics.arcade.bounds.bottom - @sprite.height)
@@ -79,10 +87,16 @@ define [
 
     setupSockets: () =>
       socket = @game.socket
-      socket.on('left', @moveLeft)
-      socket.on('right', @moveRight)
-      socket.on('up', @moveUp)
-      socket.on('down', @moveDown)
+      cursors = @game.input.keyboard.createCursorKeys()
+      mapping = {
+        left: @moveLeft
+        right: @moveRight
+        up: @moveUp
+        down: @moveDown
+      }
+      for direction of mapping
+        socket.on(direction, mapping[direction])
+        cursors[direction].onDown.add(mapping[direction])
 
     fadeArrow: (angle) =>
       {x: x, y: y} = @sprite.body

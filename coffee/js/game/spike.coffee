@@ -16,14 +16,22 @@ define [
       @body.fixedRotation = true
       @body.damping = 1 - (1e-10)
 
+      # @body.onBeginContact.add((body) =>
+      #   @game.sound.play('spike_hit_wall', game.player.volumeFor(this))
+      # )
+
       setTimeout(() =>
         if @moves is "vertical"
           @direction = "down"
         else if @moves is "horizontal"
           @direction = "right"
+        # if @direction
+        #   @sound = @game.sound.play('saw', 0, true)
       , 0)
 
     update: () =>
+      # if @sound
+      #   @sound.volume = game.player.volumeFor(this) / 5
       switch @direction
         when "down"
           if @body.velocity.y < -1

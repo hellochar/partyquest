@@ -89,17 +89,7 @@
     <property name="moves" value="vertical"/>
    </properties>
   </object>
-  <object gid="485" x="736" y="224">
-   <properties>
-    <property name="moves" value="vertical"/>
-   </properties>
-  </object>
   <object gid="485" x="608" y="192">
-   <properties>
-    <property name="moves" value="vertical"/>
-   </properties>
-  </object>
-  <object gid="485" x="480" y="160">
    <properties>
     <property name="moves" value="vertical"/>
    </properties>
@@ -114,22 +104,7 @@
     <property name="moves" value="vertical"/>
    </properties>
   </object>
-  <object gid="485" x="992" y="288">
-   <properties>
-    <property name="moves" value="vertical"/>
-   </properties>
-  </object>
   <object gid="485" x="1120" y="320">
-   <properties>
-    <property name="moves" value="vertical"/>
-   </properties>
-  </object>
-  <object gid="485" x="1504" y="416">
-   <properties>
-    <property name="moves" value="vertical"/>
-   </properties>
-  </object>
-  <object gid="485" x="1248" y="352">
    <properties>
     <property name="moves" value="vertical"/>
    </properties>
