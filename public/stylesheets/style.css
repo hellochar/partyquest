@@ -24,6 +24,7 @@ html, body, .spans {
 }
 
 .spans {
+    display: none;
 }
 
 .spans .arrow {
@@ -37,6 +38,13 @@ html, body, .spans {
   background-color: #ddd;
   text-align: center;
   border-radius: 1em;
+  border-style: outset;
+}
+
+.spans .arrow:active {
+    border-style: inset;
+    background-color: #ccc;
+    color: orange;
 }
 
 .arrow span {

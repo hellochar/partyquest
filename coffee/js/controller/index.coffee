@@ -3,18 +3,12 @@ require [
   'tapjs'
   "socket.io"
   "fastclick"
-  'jquery.color'
 ], ($, Tap, io, FastClick) ->
 
   socket = io.connect('/controller')
 
   press = (direction) ->
     socket.emit(direction)
-    arrow = $(".arrow.#{direction}")
-    arrow.css("color", "orange")
-    arrow.animate({
-      color: "#333"
-    }, 100, "linear")
 
   registerDirection = (direction) ->
     el = $(".arrow.#{direction}")[0]
@@ -47,6 +41,7 @@ require [
       width: buttonWidth
       height: buttonHeight
     )
+    $(".spans").show()
 
   $(window).resize setButtonSize
   setButtonSize()
