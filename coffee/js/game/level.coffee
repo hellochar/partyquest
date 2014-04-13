@@ -18,6 +18,7 @@ define [
       @game.load.image('exit', 'images/exit.png')
 
     destroy: () ->
+      @game.physics.p2.clearTilemapLayerBodies(@map, @platforms)
       @map.destroy()
       @platforms.destroy()
       @spikes.destroy()
