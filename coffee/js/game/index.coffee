@@ -99,8 +99,8 @@ require [
     game.load.audio('drum_tom', 'audio/drum_tom.mp3')
     game.load.audio('crowd_applause', 'audio/crowd_applause.mp3')
     game.load.audio('explosion_audio', 'audio/explosion.mp3')
-    game.load.audio('spike_hit_wall', 'audio/spike_hit_wall.mp3')
-    game.load.audio('saw', 'audio/saw.mp3')
+    # game.load.audio('spike_hit_wall', 'audio/spike_hit_wall.mp3')
+    # game.load.audio('saw', 'audio/saw.mp3')
 
 
   create = ->

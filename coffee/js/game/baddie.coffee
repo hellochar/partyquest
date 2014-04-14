@@ -4,7 +4,9 @@ define [
   class Baddie extends Phaser.Sprite
     constructor: (game, x, y, key, frame) ->
       super(game, x, y, key, frame)
-      @anchor.set(0, 0)
+      @x += @width/2
+      @y += @height/2
+      @y -= @height
       @game.physics.p2.enable(this)
       @body.fixedRotation = true
       @body.damping = 1 - (1e-10)
@@ -12,7 +14,7 @@ define [
       @animations.add("left", [1, 0], 10, true)
       @animations.add("right", [2, 3], 10, true)
 
-    hitPlayer: (player) ->
+    hitPlayer: (player) =>
       @game.sound.play('pig_squeal')
       @game.sound.play('explosion_audio')
       explosion = @game.add.sprite(@x, @y, 'explosion')
@@ -20,8 +22,9 @@ define [
       explosion.anchor.set(0.5)
       anim = explosion.animations.add('explosion')
       anim.play(20, false)
+      game = @game
       setTimeout(() =>
-        residue = @game.add.sprite(explosion.x, explosion.y, 'explosion_residue')
+        residue = game.add.sprite(explosion.x, explosion.y, 'explosion_residue')
         residue.scale.set(2)
         residue.anchor.set(0.5)
         explosion.bringToTop()
