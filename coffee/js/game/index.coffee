@@ -7,6 +7,7 @@ require [
   'game/spike'
   'game/baddie'
   'game/player'
+  'game/game_monkeypatch'
 ], ($, _, io, Phaser, Level, Spike, Baddie, Player) ->
 
   overlay = (text) ->
@@ -91,6 +92,7 @@ require [
 
     game.load.spritesheet('baddie', 'images/baddie.png', 32, 32)
     game.load.spritesheet('explosion', 'images/explosion.png', 64, 64)
+    game.load.spritesheet('button', 'images/button.png', 32, 32)
     game.load.image('explosion_residue', 'images/explosion_residue.png')
 
     game.load.audio('pickup-coin', 'audio/Pickup_Coin.wav')
@@ -99,6 +101,8 @@ require [
     game.load.audio('drum_tom', 'audio/drum_tom.mp3')
     game.load.audio('crowd_applause', 'audio/crowd_applause.mp3')
     game.load.audio('explosion_audio', 'audio/explosion.mp3')
+    game.load.audio('button_click', 'audio/button_click.mp3')
+    game.load.audio('button_release', 'audio/button_release.mp3')
     # game.load.audio('spike_hit_wall', 'audio/spike_hit_wall.mp3')
     # game.load.audio('saw', 'audio/saw.mp3')
 
@@ -123,8 +127,8 @@ require [
     game.physics.p2.setPostBroadphaseCallback(broadphaseFilter, this)
 
     # the level must be created before the player
-    overlay("Level 1")
-    # $("#overlay").hide()
+    # overlay("Level 1")
+    $("#overlay").hide()
     loadLevel(1)
 
     player.create()

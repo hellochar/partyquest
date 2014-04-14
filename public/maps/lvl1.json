@@ -452,7 +452,7 @@
                 {
                  "gid":485,
                  "height":0,
-                 "name":"",
+                 "name":"spike1",
                  "properties":
                     {
 
@@ -575,6 +575,31 @@
          "width":69,
          "x":0,
          "y":0
+        }, 
+        {
+         "height":28,
+         "name":"Buttons",
+         "objects":[
+                {
+                 "gid":491,
+                 "height":0,
+                 "name":"",
+                 "properties":
+                    {
+                     "onpress":"game.level.spikes.findByName('spike1').kill()"
+                    },
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":192,
+                 "y":448
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "width":69,
+         "x":0,
+         "y":0
         }],
  "orientation":"orthogonal",
  "properties":
@@ -662,6 +687,21 @@
          "imagewidth":128,
          "margin":0,
          "name":"baddie",
+         "properties":
+            {
+
+            },
+         "spacing":0,
+         "tileheight":32,
+         "tilewidth":32
+        }, 
+        {
+         "firstgid":491,
+         "image":"..\/images\/button.png",
+         "imageheight":32,
+         "imagewidth":64,
+         "margin":0,
+         "name":"button",
          "properties":
             {
 

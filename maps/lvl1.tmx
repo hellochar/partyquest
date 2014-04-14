@@ -19,6 +19,9 @@
  <tileset firstgid="487" name="baddie" tilewidth="32" tileheight="32">
   <image source="../public/images/baddie.png" width="128" height="32"/>
  </tileset>
+ <tileset firstgid="491" name="button" tilewidth="32" tileheight="32">
+  <image source="../public/images/button.png" width="64" height="32"/>
+ </tileset>
  <layer name="Tile Layer 1" width="69" height="28">
   <data encoding="csv">
 28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,
@@ -96,4 +99,5 @@
  </objectgroup>
  <objectgroup name="Box Layer" width="69" height="28"/>
  <objectgroup name="Baddies" width="69" height="28"/>
+ <objectgroup name="Buttons" width="69" height="28"/>
 </map>

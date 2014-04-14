@@ -2,8 +2,9 @@ define [
   'game/baddie'
   'game/spike'
   'game/box'
+  'game/button'
   'phaser'
-], (Baddie, Spike, Box, Phaser) ->
+], (Baddie, Spike, Box, Button, Phaser) ->
   class Level
     # @level = 1, 2, 3, etc.
     constructor: (@game, @num) ->
@@ -25,6 +26,7 @@ define [
       @spikes.destroy()
       @boxes.destroy()
       @baddies.destroy()
+      @buttons.destroy()
       @spawnLocation = undefined
       @exit.destroy()
 
@@ -61,12 +63,14 @@ define [
       @spikes = createGroup()
       @boxes = createGroup()
       @baddies = createGroup()
+      @buttons = createGroup()
 
       # commonCollisionGroups = [@spikes.collisionGroup, @boxes.collisionGroup, @baddies.collisionGroup, @platforms.collisionGroup]
 
       populateGroup(@spikes, 'Spike Layer', 485, 'spike', Spike)
       populateGroup(@boxes, 'Box Layer', 486, 'box', Box)
       populateGroup(@baddies, 'Baddies', 488, 'baddie', Baddie)
+      populateGroup(@buttons, 'Buttons', 491, 'button', Button)
 
       @spawnLocation = new Phaser.Point(@map.collision.Spawn[0].x, @map.collision.Spawn[0].y)
 
