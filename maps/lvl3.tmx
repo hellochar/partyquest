@@ -19,6 +19,12 @@
  <tileset firstgid="487" name="baddie" tilewidth="32" tileheight="32">
   <image source="../public/images/baddie.png" width="128" height="32"/>
  </tileset>
+ <tileset firstgid="491" name="fence" tilewidth="32" tileheight="32">
+  <image source="../public/images/fence.png" width="96" height="128"/>
+ </tileset>
+ <tileset firstgid="503" name="button" tilewidth="32" tileheight="32">
+  <image source="../public/images/button.png" width="64" height="32"/>
+ </tileset>
  <layer name="Tile Layer 1" width="60" height="60">
   <data encoding="csv">
 28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,28,
@@ -94,9 +100,29 @@
  </objectgroup>
  <objectgroup name="Box Layer" width="60" height="60"/>
  <objectgroup name="Baddies" width="60" height="60">
-  <object gid="488" x="800" y="160"/>
+  <object gid="488" x="704" y="160"/>
   <object gid="488" x="224" y="832"/>
   <object gid="488" x="320" y="1184"/>
   <object gid="488" x="320" y="1280"/>
+ </objectgroup>
+ <objectgroup name="Fences" width="60" height="60">
+  <object gid="495" x="736" y="128"/>
+  <object gid="495" x="736" y="160"/>
+  <object gid="495" x="736" y="192"/>
+  <object gid="495" x="160" y="224"/>
+  <object gid="495" x="128" y="224"/>
+  <object gid="495" x="96" y="224"/>
+ </objectgroup>
+ <objectgroup name="Buttons" width="60" height="60">
+  <object gid="503" x="192" y="160">
+   <properties>
+    <property name="onpress" value="game.level.baddies.findInRectangle('rect1').forEach(function (fence) { fence.kill(); })"/>
+    <property name="onrelease" value="game.level.baddies.findInRectangle('rect1').forEach(function (fence) { fence.revive(); })"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="Rectangles" width="60" height="60">
+  <object name="rect1" x="704" y="96" width="64" height="96"/>
+  <object name="rect2" x="224" y="96" width="64" height="96"/>
  </objectgroup>
 </map>

@@ -40,6 +40,10 @@ module.exports = function(grunt) {
                 files: ['.rebooted'], // app.js writes to this dummy file when it loads
                 tasks: '',
             },
+            'public': {
+                files: 'public/**/*.*',
+                tasks: '',
+            },
         },
         nodemon: {
             dev: {

@@ -12,7 +12,6 @@ define [
       @game.physics.p2.enable(this)
       @body.fixedRotation = true
       @body.motionState = Phaser.Physics.P2.Body.STATIC
-      @body.debug = true
       numPressing = 0
       @body.onBeginContact.add((body) =>
         if body.sprite

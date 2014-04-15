@@ -118,7 +118,7 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":800,
+                 "x":704,
                  "y":160
                 }, 
                 {
@@ -162,6 +162,164 @@
                  "width":0,
                  "x":320,
                  "y":1280
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "width":60,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "height":60,
+         "name":"Fences",
+         "objects":[
+                {
+                 "gid":495,
+                 "height":0,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":736,
+                 "y":128
+                }, 
+                {
+                 "gid":495,
+                 "height":0,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":736,
+                 "y":160
+                }, 
+                {
+                 "gid":495,
+                 "height":0,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":736,
+                 "y":192
+                }, 
+                {
+                 "gid":495,
+                 "height":0,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":160,
+                 "y":224
+                }, 
+                {
+                 "gid":495,
+                 "height":0,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":128,
+                 "y":224
+                }, 
+                {
+                 "gid":495,
+                 "height":0,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":96,
+                 "y":224
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "width":60,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "height":60,
+         "name":"Buttons",
+         "objects":[
+                {
+                 "gid":503,
+                 "height":0,
+                 "name":"",
+                 "properties":
+                    {
+                     "onpress":"game.level.baddies.findInRectangle('rect1').forEach(function (fence) { fence.kill(); })",
+                     "onrelease":"game.level.baddies.findInRectangle('rect1').forEach(function (fence) { fence.revive(); })"
+                    },
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":192,
+                 "y":160
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "width":60,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "height":60,
+         "name":"Rectangles",
+         "objects":[
+                {
+                 "height":96,
+                 "name":"rect1",
+                 "properties":
+                    {
+
+                    },
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":704,
+                 "y":96
+                }, 
+                {
+                 "height":96,
+                 "name":"rect2",
+                 "properties":
+                    {
+
+                    },
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":224,
+                 "y":96
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -256,6 +414,36 @@
          "imagewidth":128,
          "margin":0,
          "name":"baddie",
+         "properties":
+            {
+
+            },
+         "spacing":0,
+         "tileheight":32,
+         "tilewidth":32
+        }, 
+        {
+         "firstgid":491,
+         "image":"..\/images\/fence.png",
+         "imageheight":128,
+         "imagewidth":96,
+         "margin":0,
+         "name":"fence",
+         "properties":
+            {
+
+            },
+         "spacing":0,
+         "tileheight":32,
+         "tilewidth":32
+        }, 
+        {
+         "firstgid":503,
+         "image":"..\/images\/button.png",
+         "imageheight":32,
+         "imagewidth":64,
+         "margin":0,
+         "name":"button",
          "properties":
             {
 

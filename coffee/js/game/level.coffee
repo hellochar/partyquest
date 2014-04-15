@@ -29,6 +29,7 @@ define [
       @buttons.destroy()
       @spawnLocation = undefined
       @exit.destroy()
+      @rectangles = null
 
     create: () =>
 
@@ -44,6 +45,15 @@ define [
       # @platforms.collisionGroup = game.physics.p2.createCollisionGroup()
       # for body in platformBodies
       #   body.setCollisionGroup(@platforms.collisionGroup)
+
+
+      @rectangles = {}
+      if @map.collision.Rectangles
+        for rect in @map.collision.Rectangles
+          if rect.name
+            @rectangles[rect.name] = new Phaser.Rectangle(rect.x, rect.y, rect.width, rect.height)
+          else
+            console.warn("found rectangle with no name at #{rect.x}, #{rect.y}!")
 
       createGroup = () =>
         group = game.add.group()
@@ -70,7 +80,7 @@ define [
       populateGroup(@spikes, 'Spike Layer', 485, 'spike', Spike)
       populateGroup(@boxes, 'Box Layer', 486, 'box', Box)
       populateGroup(@baddies, 'Baddies', 488, 'baddie', Baddie)
-      populateGroup(@buttons, 'Buttons', 491, 'button', Button)
+      populateGroup(@buttons, 'Buttons', 503, 'button', Button)
 
       @spawnLocation = new Phaser.Point(@map.collision.Spawn[0].x, @map.collision.Spawn[0].y)
 

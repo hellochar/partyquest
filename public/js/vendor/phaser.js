@@ -50992,6 +50992,24 @@ Phaser.TilemapParser = {
                     collision[json.layers[i].name].push(object);
 
                 }
+                else {
+                    var object = {
+
+                        name: json.layers[i].objects[v].name,
+                        x: json.layers[i].objects[v].x,
+                        y: json.layers[i].objects[v].y,
+                        width: json.layers[i].objects[v].width,
+                        height: json.layers[i].objects[v].height,
+                        visible: json.layers[i].objects[v].visible,
+                        properties: json.layers[i].objects[v].properties
+
+                    };
+
+                    // heuristic for finding a rectangle
+                    if(object.width !== 0 && object.height !== 0) {
+                        collision[json.layers[i].name].push(object);
+                    }
+                }
 
             }
         }

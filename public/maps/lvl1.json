@@ -452,7 +452,7 @@
                 {
                  "gid":485,
                  "height":0,
-                 "name":"spike1",
+                 "name":"",
                  "properties":
                     {
 
@@ -579,21 +579,7 @@
         {
          "height":28,
          "name":"Buttons",
-         "objects":[
-                {
-                 "gid":491,
-                 "height":0,
-                 "name":"",
-                 "properties":
-                    {
-                     "onpress":"game.level.spikes.findByName('spike1').kill()"
-                    },
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":192,
-                 "y":448
-                }],
+         "objects":[],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
