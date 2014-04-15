@@ -93,6 +93,7 @@ require [
     game.load.spritesheet('baddie', 'images/baddie.png', 32, 32)
     game.load.spritesheet('explosion', 'images/explosion.png', 64, 64)
     game.load.spritesheet('button', 'images/button.png', 32, 32)
+    game.load.spritesheet('fence', 'images/fence.png', 32, 32)
     game.load.image('explosion_residue', 'images/explosion_residue.png')
 
     game.load.audio('pickup-coin', 'audio/Pickup_Coin.wav')

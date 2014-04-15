@@ -2,7 +2,7 @@ define [
   'phaser'
 ], (Phaser) ->
   class Baddie extends Phaser.Sprite
-    constructor: (game, x, y, key, frame) ->
+    constructor: (game, x, y, key, frame = 1) ->
       super(game, x, y, key, frame)
       @x += @width/2
       @y += @height/2
@@ -39,6 +39,7 @@ define [
       )
 
       @events.onRevived.add(() =>
+        debugger
         isReallyDead = false
       )
 

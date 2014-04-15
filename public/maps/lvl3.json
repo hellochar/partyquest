@@ -275,8 +275,7 @@
                  "name":"",
                  "properties":
                     {
-                     "onpress":"game.level.baddies.findInRectangle('rect1').forEach(function (fence) { fence.kill(); })",
-                     "onrelease":"game.level.baddies.findInRectangle('rect1').forEach(function (fence) { fence.revive(); })"
+                     "onpress":"game.level.fences.findInRectangle('rect1').forEach(function (fence) { fence.kill(); })"
                     },
                  "type":"",
                  "visible":true,

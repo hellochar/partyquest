@@ -3,8 +3,9 @@ define [
   'game/spike'
   'game/box'
   'game/button'
+  'game/fence'
   'phaser'
-], (Baddie, Spike, Box, Button, Phaser) ->
+], (Baddie, Spike, Box, Button, Fence, Phaser) ->
   class Level
     # @level = 1, 2, 3, etc.
     constructor: (@game, @num) ->
@@ -27,6 +28,7 @@ define [
       @boxes.destroy()
       @baddies.destroy()
       @buttons.destroy()
+      @fences.destroy()
       @spawnLocation = undefined
       @exit.destroy()
       @rectangles = null
@@ -41,7 +43,7 @@ define [
 
       @platforms = @map.createLayer('Tile Layer 1')
       @platforms.resizeWorld()
-      platformBodies = @game.physics.p2.convertTilemap(@map, @platforms)
+      @platformBodies = @game.physics.p2.convertTilemap(@map, @platforms)
       # @platforms.collisionGroup = game.physics.p2.createCollisionGroup()
       # for body in platformBodies
       #   body.setCollisionGroup(@platforms.collisionGroup)
@@ -74,6 +76,7 @@ define [
       @boxes = createGroup()
       @baddies = createGroup()
       @buttons = createGroup()
+      @fences = createGroup()
 
       # commonCollisionGroups = [@spikes.collisionGroup, @boxes.collisionGroup, @baddies.collisionGroup, @platforms.collisionGroup]
 
@@ -81,6 +84,7 @@ define [
       populateGroup(@boxes, 'Box Layer', 486, 'box', Box)
       populateGroup(@baddies, 'Baddies', 488, 'baddie', Baddie)
       populateGroup(@buttons, 'Buttons', 503, 'button', Button)
+      populateGroup(@fences, 'Fences', 495, 'fence', Fence)
 
       @spawnLocation = new Phaser.Point(@map.collision.Spawn[0].x, @map.collision.Spawn[0].y)
 

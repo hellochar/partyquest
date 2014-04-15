@@ -116,8 +116,7 @@
  <objectgroup name="Buttons" width="60" height="60">
   <object gid="503" x="192" y="160">
    <properties>
-    <property name="onpress" value="game.level.baddies.findInRectangle('rect1').forEach(function (fence) { fence.kill(); })"/>
-    <property name="onrelease" value="game.level.baddies.findInRectangle('rect1').forEach(function (fence) { fence.revive(); })"/>
+    <property name="onpress" value="game.level.fences.findInRectangle('rect1').forEach(function (fence) { fence.kill(); })"/>
    </properties>
   </object>
  </objectgroup>
