@@ -18,25 +18,27 @@ define [
         explosion.anchor.set(0.5)
         anim = explosion.animations.add('explosion')
         anim.play(20, false)
-        game = @game
-        @destroy()
         setTimeout(() =>
-          residue = game.add.sprite(explosion.x, explosion.y, 'explosion_residue')
+          residue = @game.add.sprite(explosion.x, explosion.y, 'explosion_residue')
           residue.scale.set(2)
           residue.anchor.set(0.5)
           explosion.bringToTop()
+          @destroy()
         , 400)
         anim.onComplete.add(() =>
           setTimeout((-> explosion.destroy()), 0)
         )
       )
 
+    initialize: () =>
+      @sightRange ||= 280
+
     hitPlayer: (player) =>
       @kill()
 
     distanceToPlayer: () => @position.distance(@game.player.sprite.position)
 
-    isAttacking: () => @distanceToPlayer() < 300
+    isAttacking: () => @distanceToPlayer() < @sightRange
 
     update: () =>
       if @exists
@@ -52,6 +54,8 @@ define [
           @animations.play('left')
         else
           @animations.stop()
+          @frame = 2 if @frame is 3
+          @frame = 1 if @frame is 0
           if Math.random() < .003
             if @frame < 2
               @frame = 2
