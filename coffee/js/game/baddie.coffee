@@ -1,50 +1,38 @@
 define [
-  'phaser'
-], (Phaser) ->
-  class Baddie extends Phaser.Sprite
+  'game/mysprite'
+], (MySprite) ->
+  class Baddie extends MySprite
     constructor: (game, x, y, key, frame = 1) ->
       super(game, x, y, key, frame)
-      @x += @width/2
-      @y += @height/2
-      @y -= @height
-      @game.physics.p2.enable(this)
-      @body.fixedRotation = true
-      @body.damping = 1 - (1e-10)
       @lastSnort = 0
       @animations.add("left", [1, 0], 10, true)
       @animations.add("right", [2, 3], 10, true)
 
-      isReallyDead = false
       # explode on killed
       @events.onKilled.add(() =>
-        if not isReallyDead
-          @game.sound.play('pig_squeal')
-          @game.sound.play('explosion_audio')
-          explosion = @game.add.sprite(@x, @y, 'explosion')
-          explosion.scale.set(2)
-          explosion.anchor.set(0.5)
-          anim = explosion.animations.add('explosion')
-          anim.play(20, false)
-          game = @game
-          setTimeout(() =>
-            residue = game.add.sprite(explosion.x, explosion.y, 'explosion_residue')
-            residue.scale.set(2)
-            residue.anchor.set(0.5)
-            explosion.bringToTop()
-          , 400)
-          anim.onComplete.add(() =>
-            setTimeout((-> explosion.destroy()), 0)
-          )
-          isReallyDead = true
-      )
-
-      @events.onRevived.add(() =>
-        debugger
-        isReallyDead = false
+        volume = @game.player.volumeFor(this)
+        @game.sound.play('pig_squeal', volume)
+        @game.sound.play('explosion_audio', volume)
+        explosion = @game.add.sprite(@x, @y, 'explosion')
+        explosion.scale.set(2)
+        explosion.anchor.set(0.5)
+        anim = explosion.animations.add('explosion')
+        anim.play(20, false)
+        game = @game
+        @destroy()
+        setTimeout(() =>
+          residue = game.add.sprite(explosion.x, explosion.y, 'explosion_residue')
+          residue.scale.set(2)
+          residue.anchor.set(0.5)
+          explosion.bringToTop()
+        , 400)
+        anim.onComplete.add(() =>
+          setTimeout((-> explosion.destroy()), 0)
+        )
       )
 
     hitPlayer: (player) =>
-      @destroy()
+      @kill()
 
     distanceToPlayer: () => @position.distance(@game.player.sprite.position)
 
@@ -53,10 +41,10 @@ define [
     update: () =>
       if @exists
         if @isAttacking()
-          @game.physics.arcade.moveToObject(this, @game.player.sprite, 60)
+          @game.physics.arcade.moveToObject(this, @game.player.sprite, @speed || 60)
           if Date.now() - @lastSnort > 12 * 1000
             @lastSnort = Date.now()
-            @game.sound.play('pig_grunt')
+            @game.sound.play('pig_grunt', @game.player.volumeFor(this))
 
         if @body.velocity.x < -.1
           @animations.play('right')

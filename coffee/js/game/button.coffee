@@ -1,16 +1,13 @@
 define [
+  'game/mysprite'
   'phaser'
-], (Phaser) ->
-  class Button extends Phaser.Sprite
+], (MySprite, Phaser) ->
+
+  class Button extends MySprite
     constructor: (game, x, y, key, frame = 0) ->
       super(game, x, y, key, frame)
-      @x += @width/2
-      @y += @height/2
-      @y -= @height
       @events.onPressed = new Phaser.Signal()
       @events.onReleased = new Phaser.Signal()
-      @game.physics.p2.enable(this)
-      @body.fixedRotation = true
       @body.motionState = Phaser.Physics.P2.Body.STATIC
       numPressing = 0
       @body.onBeginContact.add((body) =>
@@ -31,5 +28,3 @@ define [
             eval(@onrelease) if @onrelease
             @frame = 0
       )
-
-    # update: () =>

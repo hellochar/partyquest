@@ -104,7 +104,7 @@ require [
     game.load.audio('explosion_audio', 'audio/explosion.mp3')
     game.load.audio('button_click', 'audio/button_click.mp3')
     game.load.audio('button_release', 'audio/button_release.mp3')
-    # game.load.audio('spike_hit_wall', 'audio/spike_hit_wall.mp3')
+    game.load.audio('spike_hit_wall', 'audio/spike_hit_wall.mp3')
     # game.load.audio('saw', 'audio/saw.mp3')
 
 

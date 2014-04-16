@@ -1,16 +1,15 @@
 define [
+  'game/mysprite'
   'phaser'
-], (Phaser) ->
-  class Fence extends Phaser.Sprite
+], (MySprite, Phaser) ->
+  class Fence extends MySprite
     constructor: (game, x, y, key, frame = 4) ->
       super(game, x, y, key, frame)
-      @x += @width/2
-      @y += @height/2
-      @y -= @height
-      @game.physics.p2.enable(this)
-      @body.fixedRotation = true
       @body.motionState = Phaser.Physics.P2.Body.STATIC
       @body.static = true
       @body.mass = Number.MAX_VALUE
 
-    # update: () =>
+      # @events.onRevived.add(() =>
+      #   if @getBounds().intersects(@game.player.sprite.getBounds())
+      #     game.player.sprite.kill()
+      # )

@@ -1,33 +1,16 @@
 define [
-  'phaser'
-], (Phaser) ->
+  'game/mysprite'
+], (MySprite) ->
   MOVE_SPEED = 500
 
-  class Spike extends Phaser.Sprite
-    constructor: (game, x, y, key, frame) ->
-      super(game, x, y, key, frame)
-      # p2 forces the anchor to be at the center but x/y are top-left, so move the sprite
-      # such that the physics body is positioned correctly
-      @x += @width/2
-      @y += @height/2
-
-      @y -= @height
-      @game.physics.p2.enable(this)
-      @body.fixedRotation = true
-      @body.damping = 1 - (1e-10)
-
-      # @body.onBeginContact.add((body) =>
-      #   @game.sound.play('spike_hit_wall', game.player.volumeFor(this))
-      # )
-
-      setTimeout(() =>
-        if @moves is "vertical"
-          @direction = "down"
-        else if @moves is "horizontal"
-          @direction = "right"
-        # if @direction
-        #   @sound = @game.sound.play('saw', 0, true)
-      , 0)
+  class Spike extends MySprite
+    initialize: () =>
+      if @moves is "vertical"
+        @direction = "down"
+      else if @moves is "horizontal"
+        @direction = "right"
+      # if @direction
+      #   @sound = @game.sound.play('saw', 0, true)
 
     update: () =>
       # if @sound

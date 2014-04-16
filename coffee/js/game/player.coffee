@@ -9,7 +9,7 @@ define [
     constructor: (@game) ->
       @sprite = null
       @deaths = 0
-      @tapVelocity = 1500
+      @tapVelocity = 1300
 
     preload: () ->
       @game.load.spritesheet('dude', 'images/dude.png', 32, 42)
@@ -17,7 +17,7 @@ define [
 
       @game.load.audio('move', 'audio/Move.wav')
       @game.load.audio('death', 'audio/death.mp3')
-      @game.load.audio('hit-spike', 'audio/Hit_Spike.wav')
+      @game.load.audio('hit_spike', 'audio/Hit_Spike.wav')
 
     create: () ->
       @reset()
@@ -25,7 +25,7 @@ define [
 
     hitSpike: (spike) ->
       @sprite.kill()
-      @game.sound.play('hit-spike')
+      @game.sound.play('hit_spike')
 
     hitBaddie: (baddie) ->
       @sprite.kill()
@@ -34,6 +34,7 @@ define [
       if @sprite
         @sprite.destroy()
       @sprite = @game.add.sprite(@game.level.spawnLocation.x, @game.level.spawnLocation.y, "dude")
+      @sprite.height = 32
       @sprite.x += @sprite.width/2
       @sprite.y += @sprite.height/2
       @sprite.player = this
