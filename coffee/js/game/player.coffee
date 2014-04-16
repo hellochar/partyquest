@@ -38,20 +38,13 @@ define [
       @sprite.x += @sprite.width/2
       @sprite.y += @sprite.height/2
       @sprite.player = this
-      @sprite.smoothed = false
+      # @sprite.smoothed = false
+
       @game.physics.p2.enable(@sprite)
       @sprite.body.damping = 1 - (1e-12)
       @sprite.body.fixedRotation = true
+      @sprite.body.setRectangle(26, 26, 0, 0, 0) # normally the body is 32x32 but make it a bit smaller; it's more fun this way
 
-      # @sprite.body.onImpact.add(() ->
-      #   debugger
-      # )
-
-      # for some reason this makes the player "bounce" off the world bounds when he gets reset (even though the sprite gets destroyed?!)
-      # so comment out for now
-      # @sprite.body.collideWorldBounds = true
-
-      #  Our two animations, walking left and right.
       @sprite.animations.add("left", [0, 1, 2, 3], 10, true)
       @sprite.animations.add("right", [5, 6, 7, 8], 10, true)
       @sprite.events.onKilled.add(() =>

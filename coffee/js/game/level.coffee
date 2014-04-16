@@ -33,13 +33,19 @@ define [
       @exit.destroy()
       @rectangles = null
 
+    unfence: (rectName) =>
+      fence.kill() for fence in @fences.findInRectangle(rectName)
+
+    refence: (rectName) =>
+      fence.revive() for fence in @fences.findInRectangle(rectName)
+
     create: () =>
 
       @timeStarted = Date.now()
 
       @map = @game.add.tilemap("level#{@num}")
       @map.addTilesetImage('tilesheet')
-      @map.setCollisionBetween(28, 28)
+      @map.setCollisionBetween(28, 30)
 
       @platforms = @map.createLayer('Tile Layer 1')
       @platforms.resizeWorld()
@@ -72,18 +78,18 @@ define [
           cb(sprite) if cb
         )
 
+      @buttons = createGroup()
       @spikes = createGroup()
       @boxes = createGroup()
       @baddies = createGroup()
-      @buttons = createGroup()
       @fences = createGroup()
 
       # commonCollisionGroups = [@spikes.collisionGroup, @boxes.collisionGroup, @baddies.collisionGroup, @platforms.collisionGroup]
 
+      populateGroup(@buttons, 'Buttons', 503, 'button', Button)
       populateGroup(@spikes, 'Spike Layer', 485, 'spike', Spike)
       populateGroup(@boxes, 'Box Layer', 486, 'box', Box)
       populateGroup(@baddies, 'Baddies', 488, 'baddie', Baddie)
-      populateGroup(@buttons, 'Buttons', 503, 'button', Button)
       populateGroup(@fences, 'Fences', 495, 'fence', Fence)
 
       @spawnLocation = new Phaser.Point(@map.collision.Spawn[0].x, @map.collision.Spawn[0].y)
