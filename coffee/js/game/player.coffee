@@ -34,7 +34,6 @@ define [
       if @sprite
         @sprite.destroy()
       @sprite = @game.add.sprite(@game.level.spawnLocation.x, @game.level.spawnLocation.y, "dude")
-      @sprite.height = 32
       @sprite.x += @sprite.width/2
       @sprite.y += @sprite.height/2
       @sprite.player = this
@@ -43,7 +42,7 @@ define [
       @game.physics.p2.enable(@sprite)
       @sprite.body.damping = 1 - (1e-12)
       @sprite.body.fixedRotation = true
-      @sprite.body.setRectangle(26, 26, 0, 0, 0) # normally the body is 32x32 but make it a bit smaller; it's more fun this way
+      @sprite.body.setRectangle(@sprite.width - 6, @sprite.height - 6, 0, 0, 0) # normally the body is 32x32 but make it a bit smaller; it's more fun this way
 
       @sprite.animations.add("left", [0, 1, 2, 3], 10, true)
       @sprite.animations.add("right", [5, 6, 7, 8], 10, true)

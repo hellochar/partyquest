@@ -4,6 +4,8 @@ define [
 
   class MySprite extends Phaser.Sprite
     constructor: (game, x, y, key, frame) ->
+      @_originalX = x
+      @_originalY = y
       super(game, x, y, key, frame)
       # p2 forces the anchor to be at the center but x/y are top-left, so move the sprite
       # such that the physics body is positioned correctly
@@ -18,3 +20,12 @@ define [
       @body.damping = 1 - (1e-10)
 
       setTimeout(@initialize, 0) if @initialize
+
+    reset: (x, y, health) =>
+      if arguments.length is 0
+        x = @_originalX
+        y = @_originalY
+      # debugger
+      super(x, y, health)
+      @initialize() if @initialize
+      this

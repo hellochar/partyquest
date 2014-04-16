@@ -23,7 +23,7 @@ define [
           residue.scale.set(2)
           residue.anchor.set(0.5)
           explosion.bringToTop()
-          @destroy()
+          # @destroy()
         , 400)
         anim.onComplete.add(() =>
           setTimeout((-> explosion.destroy()), 0)

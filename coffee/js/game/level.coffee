@@ -6,10 +6,12 @@ define [
   'game/fence'
   'phaser'
 ], (Baddie, Spike, Box, Button, Fence, Phaser) ->
+
   class Level
     # @level = 1, 2, 3, etc.
     constructor: (@game, @num) ->
       @timeStarted = Date.now()
+      @objectGroups = []
 
     preload: () ->
       @game.load.tilemap('level1', 'maps/lvl1.json', null, Phaser.Tilemap.TILED_JSON)
@@ -24,11 +26,9 @@ define [
       @game.physics.p2.clearTilemapLayerBodies(@map, @platforms)
       @map.destroy()
       @platforms.destroy()
-      @spikes.destroy()
-      @boxes.destroy()
-      @baddies.destroy()
-      @buttons.destroy()
-      @fences.destroy()
+
+      group.destroy() for group in @objectGroups
+
       @spawnLocation = undefined
       @exit.destroy()
       @rectangles = null
@@ -38,6 +38,12 @@ define [
 
     refence: (rectName) =>
       fence.revive() for fence in @fences.findInRectangle(rectName)
+
+
+    createObject: (name, x, y) =>
+      require("game/#{name}", (ObjectClass) =>
+        object = new ObjectClass(@game, x, y, name, ) ->
+      )
 
     create: () =>
 
@@ -68,14 +74,14 @@ define [
         # group.collisionGroup = game.physics.p2.createCollisionGroup()
         group.enableBody = true
         group.physicsBodyType = Phaser.Physics.P2JS
+        @objectGroups.push(group)
         group
 
-      populateGroup = (group, layer, gid, spriteName, customClass, cb) =>
+      populateGroup = (group, layer, gid, spriteName, customClass) =>
         @map.createFromObjects(layer, gid, spriteName, undefined, undefined, undefined, group, customClass, false)
         group.forEach((sprite) ->
           # sprite.body.setCollisionGroup(group.collisionGroup)
           # sprite.body.collides(commonCollisionGroups)
-          cb(sprite) if cb
         )
 
       @buttons = createGroup()
