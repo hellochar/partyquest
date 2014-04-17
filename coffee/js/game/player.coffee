@@ -18,9 +18,16 @@ define [
       @animations.add("left", [0, 1, 2, 3], 10, true)
       @animations.add("right", [5, 6, 7, 8], 10, true)
 
+    getPixelVelocity: () =>
+      new Phaser.Point(@body.velocity.world.mpxi(@body.velocity.x), @body.velocity.world.mpxi(@body.velocity.y))
+
     update: () =>
       @body.damping = 0
       @body.data.lastDampingTimeStep = 0
+
+      FRICTION_OFFSET = 100
+      if @tileUnderneathMe().isIce()
+        FRICTION_OFFSET = 10
 
       # ok *getting* the velocity gives it to you in meters (aka game.world.mpx()), but you should *set* in pixel coordinates
 
@@ -29,14 +36,10 @@ define [
       # if Math.abs(@body.velocity.y) < .1
       #   @body.velocity.y = 0
 
-      vel = new Phaser.Point(@body.velocity.world.mpxi(@body.velocity.x), @body.velocity.world.mpxi(@body.velocity.y))
-
-      FRICTION_OFFSET = 138
+      vel = @getPixelVelocity()
       dVel = vel.clone().setMagnitude(-Math.min(FRICTION_OFFSET, vel.getMagnitude()))
-
       @body.velocity.x = vel.x + dVel.x
       @body.velocity.y = vel.y + dVel.y
-      # console.log(@body.velocity.x+", "+(@body.velocity.x = vel.x)+", "+@body.velocity.x)
 
       if not _.isFinite(@body.velocity.x) or
          not _.isFinite(@body.velocity.y)
@@ -59,7 +62,7 @@ define [
     constructor: (@game) ->
       @sprite = null
       @deaths = 0
-      @tapVelocity = 800
+      @tapVelocity = 700
 
     preload: () ->
       @game.load.spritesheet('dude', 'images/dude.png', 32, 42)
@@ -111,8 +114,14 @@ define [
         down: @moveDown
       }
       for direction of mapping
-        socket.on(direction, mapping[direction])
-        cursors[direction].onDown.add(mapping[direction])
+        ((direction) ->
+          socket.on(direction, mapping[direction])
+          cursors[direction].onDown.add(() ->
+            mapping[direction]()
+            # setTimeout(mapping[direction], 100)
+            # setTimeout(mapping[direction], 200)
+          )
+        )(direction)
 
     fadeArrow: (angle) =>
       {x: x, y: y} = @sprite.body
@@ -126,17 +135,17 @@ define [
 
     moveLeft: () =>
       #  Move to the left
-      @sprite.body.velocity.x += -@tapVelocity
+      @sprite.body.velocity.x = -@tapVelocity
       @fadeArrow(0)
 
     moveRight: () =>
-      @sprite.body.velocity.x += @tapVelocity
+      @sprite.body.velocity.x = @tapVelocity
       @fadeArrow(180)
 
     moveUp: () =>
-      @sprite.body.velocity.y += -@tapVelocity
+      @sprite.body.velocity.y = -@tapVelocity
       @fadeArrow(90)
 
     moveDown: () =>
-      @sprite.body.velocity.y += @tapVelocity
+      @sprite.body.velocity.y = @tapVelocity
       @fadeArrow(-90)
