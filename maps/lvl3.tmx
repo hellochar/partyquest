@@ -107,7 +107,7 @@
   </object>
   <object name="slider" gid="485" x="512" y="1888">
    <properties>
-    <property name="MOVE_SPEED" value="100"/>
+    <property name="MOVE_SPEED" value="110"/>
     <property name="exists" value="false"/>
     <property name="moves" value="horizontal"/>
    </properties>

@@ -9,6 +9,8 @@ define [
       @events.onPressed = new Phaser.Signal()
       @events.onReleased = new Phaser.Signal()
       @body.motionState = Phaser.Physics.P2.Body.STATIC
+      shape = @body.setRectangleFromSprite()
+      shape.sensor = true
       numPressing = 0
       @body.onBeginContact.add((body) =>
         if body.sprite

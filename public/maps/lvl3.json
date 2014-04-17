@@ -119,7 +119,7 @@
                  "name":"slider",
                  "properties":
                     {
-                     "MOVE_SPEED":"100",
+                     "MOVE_SPEED":"110",
                      "exists":"false",
                      "moves":"horizontal"
                     },

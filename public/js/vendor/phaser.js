@@ -48615,7 +48615,7 @@ Phaser.Tilemap.prototype = {
 
         for (var i = 0, len = this.objects[name].length; i < len; i++)
         {
-            if (this.objects[name][i].gid === gid)
+            if (gid === undefined || this.objects[name][i].gid === gid)
             {
                 sprite = new CustomClass(this.game, this.objects[name][i].x, this.objects[name][i].y, key, frame);
 

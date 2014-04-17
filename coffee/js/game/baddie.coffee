@@ -4,6 +4,7 @@ define [
   class Baddie extends MySprite
     constructor: (game, x, y, key, frame = 1) ->
       super(game, x, y, key, frame)
+      @body.mass = 5
       @lastSnort = 0
       @animations.add("left", [1, 0], 10, true)
       @animations.add("right", [2, 3], 10, true)
@@ -31,6 +32,7 @@ define [
 
     initialize: () =>
       @sightRange ||= 280
+      @speed ||= 60
 
     hitPlayer: (player) =>
       @kill()
@@ -42,7 +44,14 @@ define [
     update: () =>
       if @exists
         if @isAttacking()
-          @game.physics.arcade.moveToObject(this, @game.player.sprite, @speed || 60)
+          # @game.physics.arcade.moveToObject(this, @game.player.sprite, @speed || 60)
+          angle = Math.atan2(@y - @game.player.sprite.y, @x - @game.player.sprite.x)
+
+          speed = if @tileUnderneathMe().isIce() then @speed / 13 else @speed
+          vel = @getPixelVelocity()
+          @body.velocity.x = vel.x - Math.cos(angle) * speed
+          @body.velocity.y = vel.y - Math.sin(angle) * speed
+
           if Date.now() - @lastSnort > 12 * 1000
             @lastSnort = Date.now()
             @game.sound.play('pig_grunt', @game.player.volumeFor(this))

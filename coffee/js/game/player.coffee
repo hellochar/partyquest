@@ -10,40 +10,29 @@ define [
   class PlayerSprite extends MySprite
     constructor: (@player, x, y) ->
       super(player.game, x, y, 'dude', 4)
-      @body.damping = 1 - (1e-12)
+      # @body.damping = 1 - (1e-12)
       # normally the body is 32x32 but make it a bit smaller; it's more fun this way
+      @body.mass = 5
       @body.setRectangle(@width - 6, @height - 6, 0, 0, 0)
       @body.y += @height
 
       @animations.add("left", [0, 1, 2, 3], 10, true)
       @animations.add("right", [5, 6, 7, 8], 10, true)
 
-    getPixelVelocity: () =>
-      new Phaser.Point(@body.velocity.world.mpxi(@body.velocity.x), @body.velocity.world.mpxi(@body.velocity.y))
+
+    preUpdate: () =>
+      super()
+      if @tileUnderneathMe().isIce() and @getPixelVelocity().getMagnitude() > @player.tapVelocity()
+        wantedVel = @getPixelVelocity().setMagnitude(@player.tapVelocity())
+        @body.velocity.x = wantedVel.x
+        @body.velocity.y = wantedVel.y
 
     update: () =>
-      @body.damping = 0
-      @body.data.lastDampingTimeStep = 0
-
-      FRICTION_OFFSET = 100
-      if @tileUnderneathMe().isIce()
-        FRICTION_OFFSET = 10
-
-      # ok *getting* the velocity gives it to you in meters (aka game.world.mpx()), but you should *set* in pixel coordinates
 
       # if Math.abs(@body.velocity.x) < .1
       #   @body.velocity.x = 0
       # if Math.abs(@body.velocity.y) < .1
       #   @body.velocity.y = 0
-
-      vel = @getPixelVelocity()
-      dVel = vel.clone().setMagnitude(-Math.min(FRICTION_OFFSET, vel.getMagnitude()))
-      @body.velocity.x = vel.x + dVel.x
-      @body.velocity.y = vel.y + dVel.y
-
-      if not _.isFinite(@body.velocity.x) or
-         not _.isFinite(@body.velocity.y)
-        @body.velocity.x = @body.velocity.y = 0
 
       if Math.abs(@body.velocity.x) < 1
         @animations.stop()
@@ -53,16 +42,16 @@ define [
       else if @body.velocity.x > 0
         @animations.play('left')
 
-      # if @tileUnderneathMe().isIce()
-      #   @player.tapVelocity = 300
-      # else
-      #   @player.tapVelocity = 1300
-
   class Player
     constructor: (@game) ->
       @sprite = null
       @deaths = 0
-      @tapVelocity = 700
+
+    tapVelocity: () =>
+      if @sprite.tileUnderneathMe().isIce()
+        200
+      else
+        700
 
     preload: () ->
       @game.load.spritesheet('dude', 'images/dude.png', 32, 42)
@@ -135,17 +124,17 @@ define [
 
     moveLeft: () =>
       #  Move to the left
-      @sprite.body.velocity.x = -@tapVelocity
+      @sprite.body.moveLeft(@tapVelocity())
       @fadeArrow(0)
 
     moveRight: () =>
-      @sprite.body.velocity.x = @tapVelocity
+      @sprite.body.moveRight(@tapVelocity())
       @fadeArrow(180)
 
     moveUp: () =>
-      @sprite.body.velocity.y = -@tapVelocity
+      @sprite.body.moveUp(@tapVelocity())
       @fadeArrow(90)
 
     moveDown: () =>
-      @sprite.body.velocity.y = @tapVelocity
+      @sprite.body.moveDown(@tapVelocity())
       @fadeArrow(-90)

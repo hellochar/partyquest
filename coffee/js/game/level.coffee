@@ -103,8 +103,8 @@ define [
         @objectGroups.push(group)
         group
 
-      populateGroup = (group, layer, gid, spriteName, customClass) =>
-        @map.createFromObjects(layer, gid, spriteName, undefined, undefined, undefined, group, customClass, false)
+      populateGroup = (group, layer, spriteName, customClass) =>
+        @map.createFromObjects(layer, undefined, spriteName, undefined, undefined, undefined, group, customClass, false)
         group.forEach((sprite) ->
           # sprite.body.setCollisionGroup(group.collisionGroup)
           # sprite.body.collides(commonCollisionGroups)
@@ -118,11 +118,11 @@ define [
 
       # commonCollisionGroups = [@spikes.collisionGroup, @boxes.collisionGroup, @baddies.collisionGroup, @platforms.collisionGroup]
 
-      populateGroup(@buttons, 'Buttons', 503, 'button', Button)
-      populateGroup(@spikes, 'Spike Layer', 485, 'spike', Spike)
-      populateGroup(@boxes, 'Box Layer', 486, 'box', Box)
-      populateGroup(@baddies, 'Baddies', 488, 'baddie', Baddie)
-      populateGroup(@fences, 'Fences', 495, 'fence', Fence)
+      populateGroup(@buttons, 'Buttons', 'button', Button)
+      populateGroup(@spikes, 'Spike Layer', 'spike', Spike)
+      populateGroup(@boxes, 'Box Layer', 'box', Box)
+      populateGroup(@baddies, 'Baddies', 'baddie', Baddie)
+      populateGroup(@fences, 'Fences', 'fence', Fence)
 
       @spawnLocation = new Phaser.Point(@map.collision.Spawn[0].x, @map.collision.Spawn[0].y)
 

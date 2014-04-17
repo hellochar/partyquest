@@ -18,7 +18,7 @@ define [
 
       @game.physics.p2.enable(this)
       @body.fixedRotation = true
-      @body.damping = 1 - (1e-12)
+      # @body.damping = 1 - (1e-1)
 
       setTimeout(@initialize, 0) if @initialize
 
@@ -31,17 +31,27 @@ define [
       @initialize() if @initialize
       this
 
+    getPixelVelocity: () =>
+      # *getting* the velocity gives it to you in meters (aka game.world.mpx()), but you should *set* in pixel coordinates
+      new Phaser.Point(@body.velocity.world.mpxi(@body.velocity.x), @body.velocity.world.mpxi(@body.velocity.y))
+
+    getFriction: (tile) =>
+      if tile.isIce() then 3 else 100
+
     preUpdate: () =>
       super()
 
-      # # set slipperiness of my body depending on the tile i'm on
-      # tile = @tileUnderneathMe()
-      # if tile.isIce()
-      #   @body.damping = 1 - (1e-1)
-      #   @body.data.lastDampingTimeStep = 0
-      # else
-      #   @body.damping = 1 - (1e-12)
-      #   @body.data.lastDampingTimeStep = 0
+      FRICTION_OFFSET = @getFriction(@tileUnderneathMe())
+
+      vel = @getPixelVelocity()
+      dVel = vel.clone().setMagnitude(-Math.min(FRICTION_OFFSET, vel.getMagnitude()))
+      @body.velocity.x = vel.x + dVel.x
+      @body.velocity.y = vel.y + dVel.y
+
+      if not _.isFinite(@body.velocity.x) or
+         not _.isFinite(@body.velocity.y)
+        @body.velocity.x = @body.velocity.y = 0
+
 
     tileUnderneathMe: () =>
       @game.level.map.getTileWorldXY(@x, @y)
