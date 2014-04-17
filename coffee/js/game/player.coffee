@@ -22,8 +22,9 @@ define [
 
     preUpdate: () =>
       super()
-      if @tileUnderneathMe().isIce() and @getPixelVelocity().getMagnitude() > @player.tapVelocity()
-        wantedVel = @getPixelVelocity().setMagnitude(@player.tapVelocity())
+      # maximum movespeed of twice the tap velocity
+      if @getPixelVelocity().getMagnitude() > @player.tapVelocity() * 2
+        wantedVel = @getPixelVelocity().setMagnitude(@player.tapVelocity() * 2)
         @body.velocity.x = wantedVel.x
         @body.velocity.y = wantedVel.y
 
@@ -124,17 +125,17 @@ define [
 
     moveLeft: () =>
       #  Move to the left
-      @sprite.body.moveLeft(@tapVelocity())
+      @sprite.body.velocity.x = @sprite.getPixelVelocity().x - @tapVelocity()
       @fadeArrow(0)
 
     moveRight: () =>
-      @sprite.body.moveRight(@tapVelocity())
+      @sprite.body.velocity.x = @sprite.getPixelVelocity().x + @tapVelocity()
       @fadeArrow(180)
 
     moveUp: () =>
-      @sprite.body.moveUp(@tapVelocity())
+      @sprite.body.velocity.y = @sprite.getPixelVelocity().y - @tapVelocity()
       @fadeArrow(90)
 
     moveDown: () =>
-      @sprite.body.moveDown(@tapVelocity())
+      @sprite.body.velocity.y = @sprite.getPixelVelocity().y + @tapVelocity()
       @fadeArrow(-90)

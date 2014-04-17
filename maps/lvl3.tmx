@@ -139,6 +139,18 @@
   <object gid="485" x="1024" y="1760"/>
   <object gid="485" x="1056" y="1760"/>
   <object gid="485" x="1216" y="1824"/>
+  <object gid="485" x="1472" y="1824"/>
+  <object gid="485" x="1440" y="1760"/>
+  <object gid="485" x="1408" y="1760"/>
+  <object gid="485" x="1408" y="1824"/>
+  <object gid="485" x="1440" y="1792"/>
+  <object gid="485" x="1408" y="1792"/>
+  <object gid="485" x="1472" y="1760"/>
+  <object gid="485" x="1472" y="1792"/>
+  <object gid="485" x="1440" y="1824"/>
+  <object gid="485" x="1504" y="1760"/>
+  <object gid="485" x="1504" y="1792"/>
+  <object gid="485" x="1504" y="1824"/>
  </objectgroup>
  <objectgroup name="Exit" width="60" height="60">
   <object gid="484" x="1728" y="1824"/>
@@ -254,30 +266,34 @@
   <object name="remove-spikes-1" gid="503" x="672" y="1888">
    <properties>
     <property name="onpress" value="game.level.unfence('spikes-1', 'spikes');"/>
-    <property name="onrelease" value="game.level.refence('spikes-1', 'spikes');"/>
    </properties>
   </object>
   <object name="remove-spikes-2" gid="503" x="864" y="1888">
    <properties>
-    <property name="onpress" value="game.level.unfence('spikes-2', 'spikes');"/>
-    <property name="onrelease" value="game.level.refence('spikes-2', 'spikes');"/>
+    <property name="onpress" value="game.level.unfence('spikes-2', 'spikes'); game.level.refence('spikes-1', 'spikes');"/>
    </properties>
   </object>
   <object name="remove-spikes-3" gid="503" x="1056" y="1888">
    <properties>
-    <property name="onpress" value="game.level.unfence('spikes-3', 'spikes');"/>
-    <property name="onrelease" value="game.level.refence('spikes-3', 'spikes');"/>
+    <property name="onpress" value="game.level.unfence('spikes-3', 'spikes'); game.level.refence('spikes-2', 'spikes');"/>
+    <property name="onrelease" value=""/>
    </properties>
   </object>
   <object name="remove-spikes-4" gid="503" x="1248" y="1888">
    <properties>
-    <property name="onpress" value="game.level.unfence('spikes-4', 'spikes'); game.level.unfence('spikes-4');"/>
-    <property name="onrelease" value="game.level.refence('spikes-4', 'spikes'); game.level.refence('spikes-4');"/>
+    <property name="onpress" value="game.level.unfence('spikes-4', 'spikes'); game.level.refence('spikes-3', 'spikes');"/>
+    <property name="onrelease" value=""/>
    </properties>
   </object>
   <object name="close-pig-door" gid="503" x="512" y="1632">
    <properties>
     <property name="onpress" value="game.level.refence('rect-into-pigs');"/>
+   </properties>
+  </object>
+  <object name="refence-spikes-4" gid="503" x="1440" y="1888">
+   <properties>
+    <property name="onpress" value="game.level.unfence('spikes-5', 'spikes'); game.level.refence('spikes-4', 'spikes');"/>
+    <property name="onrelease" value=""/>
    </properties>
   </object>
  </objectgroup>
@@ -292,5 +308,6 @@
   <object name="spikes-3" x="1024" y="1728" width="96" height="96"/>
   <object name="spikes-4" x="1216" y="1728" width="96" height="96"/>
   <object name="rect-into-pigs" x="480" y="1664" width="96" height="64"/>
+  <object name="spikes-5" x="1408" y="1728" width="128" height="96"/>
  </objectgroup>
 </map>
