@@ -23,8 +23,9 @@ define [
     preUpdate: () =>
       super()
       # maximum movespeed of twice the tap velocity
-      if @getPixelVelocity().getMagnitude() > @player.tapVelocity() * 2
-        wantedVel = @getPixelVelocity().setMagnitude(@player.tapVelocity() * 2)
+      maximumVelocity = @player.tapVelocity() * (if @tileUnderneathMe().isIce() then 2 else 1)
+      if @getPixelVelocity().getMagnitude() > maximumVelocity
+        wantedVel = @getPixelVelocity().setMagnitude(maximumVelocity)
         @body.velocity.x = wantedVel.x
         @body.velocity.y = wantedVel.y
 

@@ -156,7 +156,7 @@
   <object gid="484" x="1728" y="1824"/>
  </objectgroup>
  <objectgroup name="Spawn" width="60" height="60">
-  <object x="480" y="1760">
+  <object x="128" y="128">
    <polyline points="0,0 0,32 32,32 32,0 0,0"/>
   </object>
  </objectgroup>
