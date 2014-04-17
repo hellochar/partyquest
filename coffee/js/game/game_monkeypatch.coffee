@@ -11,3 +11,6 @@ define [
 
   Phaser.Sprite::getBounds = (name) ->
     new Phaser.Rectangle(@x, @y, @width, @height)
+
+  Phaser.Tile::isIce = () ->
+    @index is 14 # 14 is the magical number for the ice tile index in spritesheet

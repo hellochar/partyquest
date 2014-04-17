@@ -3,13 +3,63 @@ define [
   'underscore'
   'phaser'
   'game/spike'
-], ($, _, Phaser, Spike) ->
+  'game/mysprite'
+], ($, _, Phaser, Spike, MySprite) ->
+
+
+  class PlayerSprite extends MySprite
+    constructor: (@player, x, y) ->
+      super(player.game, x, y, 'dude', 4)
+      @body.damping = 1 - (1e-12)
+      # normally the body is 32x32 but make it a bit smaller; it's more fun this way
+      @body.setRectangle(@width - 6, @height - 6, 0, 0, 0)
+      @body.y += @height
+
+      @animations.add("left", [0, 1, 2, 3], 10, true)
+      @animations.add("right", [5, 6, 7, 8], 10, true)
+
+    update: () =>
+      @body.damping = 0
+      @body.data.lastDampingTimeStep = 0
+
+      # ok *getting* the velocity gives it to you in meters (aka game.world.mpx()), but you should *set* in pixel coordinates
+
+      # if Math.abs(@body.velocity.x) < .1
+      #   @body.velocity.x = 0
+      # if Math.abs(@body.velocity.y) < .1
+      #   @body.velocity.y = 0
+
+      vel = new Phaser.Point(@body.velocity.world.mpxi(@body.velocity.x), @body.velocity.world.mpxi(@body.velocity.y))
+
+      FRICTION_OFFSET = 138
+      dVel = vel.clone().setMagnitude(-Math.min(FRICTION_OFFSET, vel.getMagnitude()))
+
+      @body.velocity.x = vel.x + dVel.x
+      @body.velocity.y = vel.y + dVel.y
+      # console.log(@body.velocity.x+", "+(@body.velocity.x = vel.x)+", "+@body.velocity.x)
+
+      if not _.isFinite(@body.velocity.x) or
+         not _.isFinite(@body.velocity.y)
+        @body.velocity.x = @body.velocity.y = 0
+
+      if Math.abs(@body.velocity.x) < 1
+        @animations.stop()
+        @frame = 4
+      else if @body.velocity.x < 0
+        @animations.play('right')
+      else if @body.velocity.x > 0
+        @animations.play('left')
+
+      # if @tileUnderneathMe().isIce()
+      #   @player.tapVelocity = 300
+      # else
+      #   @player.tapVelocity = 1300
 
   class Player
     constructor: (@game) ->
       @sprite = null
       @deaths = 0
-      @tapVelocity = 1300
+      @tapVelocity = 800
 
     preload: () ->
       @game.load.spritesheet('dude', 'images/dude.png', 32, 42)
@@ -33,19 +83,10 @@ define [
     reset: () =>
       if @sprite
         @sprite.destroy()
-      @sprite = @game.add.sprite(@game.level.spawnLocation.x, @game.level.spawnLocation.y, "dude")
-      @sprite.x += @sprite.width/2
-      @sprite.y += @sprite.height/2
-      @sprite.player = this
-      # @sprite.smoothed = false
 
-      @game.physics.p2.enable(@sprite)
-      @sprite.body.damping = 1 - (1e-12)
-      @sprite.body.fixedRotation = true
-      @sprite.body.setRectangle(@sprite.width - 6, @sprite.height - 6, 0, 0, 0) # normally the body is 32x32 but make it a bit smaller; it's more fun this way
+      @sprite = new PlayerSprite(this, @game.level.spawnLocation.x, @game.level.spawnLocation.y)
+      @sprite = @game.world.add(@sprite)
 
-      @sprite.animations.add("left", [0, 1, 2, 3], 10, true)
-      @sprite.animations.add("right", [5, 6, 7, 8], 10, true)
       @sprite.events.onKilled.add(() =>
         @game.sound.play('death')
         @deaths += 1
@@ -59,24 +100,6 @@ define [
       dist = sprite.position.distance(@sprite.position)
 
       @game.math.clamp(100 / dist - .1, 0, 1)
-
-    update: () ->
-      # @sprite.position.clampX(@game.physics.arcade.bounds.x, @game.physics.arcade.bounds.right - @sprite.width)
-      # @sprite.position.clampY(@game.physics.arcade.bounds.y, @game.physics.arcade.bounds.bottom - @sprite.height)
-
-      if not _.isFinite(@sprite.body.velocity.x) or
-         not _.isFinite(@sprite.body.velocity.y)
-        @sprite.body.velocity.x = @sprite.body.velocity.y = 0
-
-
-
-      if Math.abs(@sprite.body.velocity.x) < 1
-        @sprite.animations.stop()
-        @sprite.frame = 4
-      else if @sprite.body.velocity.x < 0
-        @sprite.animations.play('right')
-      else if @sprite.body.velocity.x > 0
-        @sprite.animations.play('left')
 
     setupSockets: () =>
       socket = @game.socket

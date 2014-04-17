@@ -175,18 +175,6 @@ require [
 
   update = ->
     level.update()
-    player.update()
-
-    # player
-    # player.sprite.body.collides(level.platforms.collisionGroup, hitWall, this)
-    # level.spikes.forEach((spike) -> spike.body.collides(player.sprite.body))
-    # player.sprite.body.collides(level.boxes.collisionGroup)
-    # player.sprite.body.collides(level.spikes.collisionGroup)
-
-    # game.physics.arcade.overlap(player.sprite, level.spikes, hitSpike, null, this)
-    # game.physics.arcade.overlap(player.sprite, level.baddies, hitBaddie, null, this)
-    # game.physics.arcade.overlap(player.sprite, level.exit, hitExit, null, this)
-
     game.camera.follow(player.sprite)
 
   game = new Phaser.Game(window.innerWidth, window.innerHeight, Phaser.AUTO, "viewport",

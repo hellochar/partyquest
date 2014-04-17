@@ -17,15 +17,19 @@ define [
       @game.load.tilemap('level1', 'maps/lvl1.json', null, Phaser.Tilemap.TILED_JSON)
       @game.load.tilemap('level2', 'maps/lvl2.json', null, Phaser.Tilemap.TILED_JSON)
       @game.load.tilemap('level3', 'maps/lvl3.json', null, Phaser.Tilemap.TILED_JSON)
+      @game.load.tilemap('level4', 'maps/lvl4.json', null, Phaser.Tilemap.TILED_JSON)
       @game.load.image('tilesheet', 'images/tilesheet.png')
       @game.load.image('spike', 'images/spike.png')
       @game.load.image('box', 'images/box.png')
       @game.load.image('exit', 'images/exit.png')
+      @game.load.image('halfwire', 'images/halfwire.png')
 
     destroy: () ->
       @game.physics.p2.clearTilemapLayerBodies(@map, @platforms)
       @map.destroy()
       @platforms.destroy()
+
+      @wires.destroy()
 
       group.destroy() for group in @objectGroups
 
@@ -33,11 +37,11 @@ define [
       @exit.destroy()
       @rectangles = null
 
-    unfence: (rectName) =>
-      fence.kill() for fence in @fences.findInRectangle(rectName)
+    unfence: (rectName, type = 'fences') =>
+      obj.kill() for obj in this[type].findInRectangle(rectName)
 
-    refence: (rectName) =>
-      fence.revive() for fence in @fences.findInRectangle(rectName)
+    refence: (rectName, type = 'fences') =>
+      obj.revive() for obj in this[type].findInRectangle(rectName)
 
 
     createObject: (name, x, y) =>
@@ -53,12 +57,34 @@ define [
       @map.addTilesetImage('tilesheet')
       @map.setCollisionBetween(28, 30)
 
+      @map.setLayer('Tile Layer 1')
+
       @platforms = @map.createLayer('Tile Layer 1')
       @platforms.resizeWorld()
       @platformBodies = @game.physics.p2.convertTilemap(@map, @platforms)
+
+      @wires = @game.add.group()
       # @platforms.collisionGroup = game.physics.p2.createCollisionGroup()
       # for body in platformBodies
       #   body.setCollisionGroup(@platforms.collisionGroup)
+      #
+      WIRE_TILE = 30
+      @map.forEach(((tile) ->
+        if tile.index is WIRE_TILE
+          neighbors = [
+           {x: 0, y: 1}
+           {x: 0, y: -1}
+           {x: 1, y: 0}
+           {x: -1, y: 0}
+          ]
+          for offset in neighbors
+            neighborTile = @map.getTile(tile.x + offset.x, tile.y + offset.y)
+            if (not neighborTile.collides) or neighborTile.index is WIRE_TILE
+              halfwire = @game.add.image(tile.worldX + 16, tile.worldY + 16, 'halfwire')
+              halfwire.anchor.set(0.5, 0.5)
+              halfwire.angle = Math.atan2(offset.y, offset.x) * 180 / Math.PI
+              @wires.add(halfwire)
+      ), this, 0, 0, @map.width, @map.height, 'Tile Layer 1')
 
 
       @rectangles = {}
