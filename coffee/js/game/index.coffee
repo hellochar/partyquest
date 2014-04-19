@@ -3,18 +3,13 @@ require [
   'underscore'
   "socket.io"
   'phaser'
+  'overlay'
   'game/level'
   'game/spike'
   'game/baddie'
   'game/player'
   'game/game_monkeypatch'
-], ($, _, io, Phaser, Level, Spike, Baddie, Player) ->
-
-  overlay = (text) ->
-    $("#overlay").fadeIn(1000).text(text)
-    setTimeout(() ->
-      $("#overlay").fadeOut(1000)
-    , 1000)
+], ($, _, io, Phaser, Overlay, Level, Spike, Baddie, Player) ->
 
   level = undefined
   player = undefined
@@ -72,7 +67,7 @@ require [
       game.sound.play('crowd_applause')
       game.sound.play('Pickup_Coin')
       currentLevel = level.num
-      overlay("Level #{currentLevel + 1}")
+      Overlay.text("Level #{currentLevel + 1}")
       setTimeout(() ->
         loadLevel(currentLevel + 1)
       , 1000)
@@ -128,8 +123,8 @@ require [
     game.physics.p2.setPostBroadphaseCallback(broadphaseFilter, this)
 
     # the level must be created before the player
-    # overlay("Level 1")
-    $("#overlay").hide()
+    # Overlay.text("Level 1")
+    Overlay.hideImmediately()
     loadLevel(1)
 
     player.create()
