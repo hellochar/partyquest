@@ -74,7 +74,9 @@ require [
 
 
   preload = ->
-    game.load.onFileComplete.add(() -> console.log("loaded", arguments, "("+game.load.progress+")"))
+    game.load.onFileComplete.add((percent, title, completed, numComplete, total) ->
+      Overlay.text("#{title} - #{percent}% (#{numComplete}/#{total})", 0)
+    )
     game.load.onFileError.add(() -> console.log("error loading", arguments, "("+game.load.progress+")"))
 
     level = new Level(game, 0)

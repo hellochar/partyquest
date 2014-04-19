@@ -6,7 +6,9 @@ require [
   'overlay'
 ], ($, Tap, io, FastClick, Overlay) ->
 
-  Overlay.el.css('background-color', 'rgba(0, 0, 0, 0.5)')
+  Overlay.el.css(
+    'background-color': 'rgba(0, 0, 0, 0.5)'
+  )
   Overlay.fadeDuration = 200
 
   socket = undefined

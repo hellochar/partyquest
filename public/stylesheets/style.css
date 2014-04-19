@@ -20,7 +20,7 @@ html, body, .spans {
   height: 100%;
   background-color: black;
   color: white;
-  font-size: 10em;
+  font-size: 3em;
   z-index: 1;
   text-align: center;
 }
