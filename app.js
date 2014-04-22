@@ -9,8 +9,11 @@ var http = require('http');
 var path = require('path');
 var _ = require('underscore');
 var coffeescript = require("connect-coffee-script");
+var cors = require('cors');
 
 var app = express();
+
+app.use(cors());
 
 // development only
 if ('development' == app.get('env')) {

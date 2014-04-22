@@ -1510,7 +1510,7 @@
                  "name":"remove-spikes-1",
                  "properties":
                     {
-                     "onpress":"game.level.unfence('spikes-1', 'spikes');"
+                     "onpress":"game.level.unfence('spikes-1', 'spikes'); game.level.refence('spikes-2', 'spikes');"
                     },
                  "type":"",
                  "visible":true,
@@ -1524,7 +1524,7 @@
                  "name":"remove-spikes-2",
                  "properties":
                     {
-                     "onpress":"game.level.unfence('spikes-2', 'spikes'); game.level.refence('spikes-1', 'spikes');"
+                     "onpress":"game.level.unfence('spikes-2', 'spikes'); game.level.refence('spikes-1', 'spikes'); game.level.refence('spikes-3', 'spikes');"
                     },
                  "type":"",
                  "visible":true,
@@ -1538,7 +1538,7 @@
                  "name":"remove-spikes-3",
                  "properties":
                     {
-                     "onpress":"game.level.unfence('spikes-3', 'spikes'); game.level.refence('spikes-2', 'spikes');",
+                     "onpress":"game.level.unfence('spikes-3', 'spikes'); game.level.refence('spikes-2', 'spikes'); game.level.refence('spikes-4', 'spikes');",
                      "onrelease":""
                     },
                  "type":"",
@@ -1553,7 +1553,7 @@
                  "name":"remove-spikes-4",
                  "properties":
                     {
-                     "onpress":"game.level.unfence('spikes-4', 'spikes'); game.level.refence('spikes-3', 'spikes');",
+                     "onpress":"game.level.unfence('spikes-4', 'spikes'); game.level.refence('spikes-3', 'spikes'); game.level.refence('spikes-5', 'spikes');",
                      "onrelease":""
                     },
                  "type":"",
@@ -1582,7 +1582,7 @@
                  "name":"refence-spikes-4",
                  "properties":
                     {
-                     "onpress":"game.level.unfence('spikes-5', 'spikes'); game.level.refence('spikes-4', 'spikes');",
+                     "onpress":"game.level.unfence('spikes-5', 'spikes'); game.level.refence('spikes-4', 'spikes'); game.level.refence('spikes-6', 'spikes');",
                      "onrelease":""
                     },
                  "type":"",

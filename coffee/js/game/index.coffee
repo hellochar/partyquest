@@ -38,10 +38,10 @@ require [
 
   broadphaseFilter = (body1, body2) ->
     [hasPlayer, sprite] =
-      if body1.sprite?.player
-        [true, body2.sprite]
+      if body1?.sprite?.player
+        [true, body2?.sprite]
       else if body2.sprite?.player
-        [true, body1.sprite]
+        [true, body1?.sprite]
       else
         [false, null]
 

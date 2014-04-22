@@ -265,23 +265,23 @@
   </object>
   <object name="remove-spikes-1" gid="503" x="672" y="1888">
    <properties>
-    <property name="onpress" value="game.level.unfence('spikes-1', 'spikes');"/>
+    <property name="onpress" value="game.level.unfence('spikes-1', 'spikes'); game.level.refence('spikes-2', 'spikes');"/>
    </properties>
   </object>
   <object name="remove-spikes-2" gid="503" x="864" y="1888">
    <properties>
-    <property name="onpress" value="game.level.unfence('spikes-2', 'spikes'); game.level.refence('spikes-1', 'spikes');"/>
+    <property name="onpress" value="game.level.unfence('spikes-2', 'spikes'); game.level.refence('spikes-1', 'spikes'); game.level.refence('spikes-3', 'spikes');"/>
    </properties>
   </object>
   <object name="remove-spikes-3" gid="503" x="1056" y="1888">
    <properties>
-    <property name="onpress" value="game.level.unfence('spikes-3', 'spikes'); game.level.refence('spikes-2', 'spikes');"/>
+    <property name="onpress" value="game.level.unfence('spikes-3', 'spikes'); game.level.refence('spikes-2', 'spikes'); game.level.refence('spikes-4', 'spikes');"/>
     <property name="onrelease" value=""/>
    </properties>
   </object>
   <object name="remove-spikes-4" gid="503" x="1248" y="1888">
    <properties>
-    <property name="onpress" value="game.level.unfence('spikes-4', 'spikes'); game.level.refence('spikes-3', 'spikes');"/>
+    <property name="onpress" value="game.level.unfence('spikes-4', 'spikes'); game.level.refence('spikes-3', 'spikes'); game.level.refence('spikes-5', 'spikes');"/>
     <property name="onrelease" value=""/>
    </properties>
   </object>
@@ -292,7 +292,7 @@
   </object>
   <object name="refence-spikes-4" gid="503" x="1440" y="1888">
    <properties>
-    <property name="onpress" value="game.level.unfence('spikes-5', 'spikes'); game.level.refence('spikes-4', 'spikes');"/>
+    <property name="onpress" value="game.level.unfence('spikes-5', 'spikes'); game.level.refence('spikes-4', 'spikes'); game.level.refence('spikes-6', 'spikes');"/>
     <property name="onrelease" value=""/>
    </properties>
   </object>
