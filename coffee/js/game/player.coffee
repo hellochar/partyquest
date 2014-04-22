@@ -58,6 +58,7 @@ define [
     preload: () ->
       @game.load.spritesheet('dude', 'images/dude.png', 32, 42)
       @game.load.image('left-arrow', 'images/arrow.png')
+      @game.load.image('partyquest_corpse', 'images/partyquest_corpse.png')
 
       @game.load.audio('move', 'audio/Move.wav')
       @game.load.audio('death', 'audio/death.mp3')
@@ -82,6 +83,8 @@ define [
       @sprite = @game.world.add(@sprite)
 
       @sprite.events.onKilled.add(() =>
+        image = @game.add.image(@sprite.x, @sprite.y, 'partyquest_corpse')
+        image.anchor.setTo(0.5, 0.5)
         @game.sound.play('death')
         @deaths += 1
         setTimeout(@reset, 1000)
