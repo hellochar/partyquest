@@ -37,6 +37,8 @@ define [
       @exit.destroy()
       @rectangles = null
 
+      @game.world.removeAll(true)
+
     unfence: (rectName, type = 'fences') =>
       obj.kill() for obj in this[type].findInRectangle(rectName)
 
@@ -134,6 +136,8 @@ define [
       @exit.body.motionState = 2
 
       @game.world.sendToBack(@platforms)
+
+      @game.player.deaths = 0
 
       # @game.physics.p2.updateBoundsCollisionGroup()
 
