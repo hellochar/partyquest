@@ -46,7 +46,6 @@ app.use(express.static(path.join(__dirname, 'compiled')));
 app.use('/js/vendor', express.static(path.join(__dirname, 'bower_components')));
 
 app.get('/', routes.index);
-app.get('/game', routes.game);
 
 var server = http.createServer(app);
 var io = require("socket.io").listen(server)
@@ -60,36 +59,93 @@ server.listen(app.get('port'), function(){
  */
 
 var controllersIo = io.of('/controller')
-var gamesIo = io.of('/game')
 
 var DIRECTIONS = ['left', 'right', 'up', 'down']
 
-var numPlayers = 0
+// I'm a slave to party-quest.com if i'm in dev mode
+if ('development' == app.get('env')) {
+    var io_client = require("socket.io-client");
+    var masterUrl = process.env.MASTER_URL || "party-quest.com/slave"
+    console.log("Starting in slave mode to ", masterUrl)
+    var controller = io_client.connect(masterUrl)
 
-function updateNumPlayers() {
-    gamesIo.emit("players", numPlayers)
-}
+    controller.on('connect', function() {
+        console.log("slave connected to master!")
 
-controllersIo.on('connection', function (socket) {
+        controllersIo.on('connection', function (socket) {
+            console.log("emitted newPlayer to master")
 
-    numPlayers += 1
-
-    updateNumPlayers()
-
-    _.each(DIRECTIONS, function(dir) {
-        socket.on(dir, function() {
-            gamesIo.emit(dir);
+            controller.emit('newPlayer')
+            socket.on('disconnect', function() {
+                console.log("emitted lostPlayer to master")
+                controller.emit('lostPlayer')
+            });
+            _.each(DIRECTIONS, function(dir) {
+                socket.on(dir, function() {
+                    console.log("emitted",dir,"to master")
+                    controller.emit(dir);
+                });
+            });
         });
+
     });
 
-    socket.on('disconnect', function() {
-        numPlayers -= 1
+} else {
+
+    app.get('/game', routes.game);
+
+    var gamesIo = io.of('/game')
+    var slavesIo = io.of('/slave')
+
+    var numPlayers = 0
+
+    function updateNumPlayers() {
+        gamesIo.emit("players", numPlayers)
+    }
+
+    controllersIo.on('connection', function (socket) {
+
+        numPlayers += 1
+
+        updateNumPlayers()
+
+        _.each(DIRECTIONS, function(dir) {
+            socket.on(dir, function() {
+                gamesIo.emit(dir);
+            });
+        });
+
+        socket.on('disconnect', function() {
+            numPlayers -= 1
+            updateNumPlayers()
+        })
+    });
+
+    gamesIo.on("connection", function (socket) {
         updateNumPlayers()
     })
-});
 
-gamesIo.on("connection", function (socket) {
-    updateNumPlayers()
-})
+    // slaves can say the following messages to a master:
+    //  newPlayer -> increment player number
+    //  lostPlayer -> decrement player number
+    //  left/right/up/down -> go in direction
+    slavesIo.on("connection", function (socket) {
+
+        socket.on("newPlayer", function() {
+            numPlayers += 1
+            updateNumPlayers()
+        });
+        socket.on("lostPlayer", function() {
+            numPlayers -= 1
+            updateNumPlayers()
+        });
+
+        _.each(DIRECTIONS, function(dir) {
+            socket.on(dir, function() {
+                gamesIo.emit(dir);
+            });
+        });
+    })
+}
 
 require('fs').writeFileSync('.rebooted', 'rebooted')
