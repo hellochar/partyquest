@@ -21,7 +21,9 @@ define [
             @events.onPressed.dispatch()
             # eval will have access to the 'self' variable
             self = this
-            eval(@onpress) if @onpress
+            if @onpress
+              eval(@onpress)
+              tile.onElectricity?.dispatch() for tile in @tileUnderneathMe().neighbors()
             @frame = 1
       )
       @body.onEndContact.add((body) =>
@@ -32,6 +34,8 @@ define [
             @events.onReleased.dispatch()
             # eval will have access to the 'self' variable
             self = this
-            eval(@onrelease) if @onrelease
+            if @onrelease
+              eval(@onrelease)
+              tile.onElectricity?.dispatch() for tile in @tileUnderneathMe().neighbors()
             @frame = 0
       )

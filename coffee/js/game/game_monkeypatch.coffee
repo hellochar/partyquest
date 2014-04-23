@@ -18,3 +18,14 @@ define [
 
   Phaser.Tile::isIce = () ->
     @index is 14 # 14 is the magical number for the ice tile index in spritesheet
+
+  NEIGHBORS = [
+    {x: 0, y: 1}
+    {x: 0, y: -1}
+    {x: 1, y: 0}
+    {x: -1, y: 0}
+  ]
+  Phaser.Tile::neighbors = () ->
+    for offset in NEIGHBORS
+      game.level.map.getTile(@x + offset.x, @y + offset.y)
+

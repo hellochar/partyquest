@@ -79,13 +79,32 @@ define [
            {x: 1, y: 0}
            {x: -1, y: 0}
           ]
+          tile.onElectricity = new Phaser.Signal()
+          tile.onElectricity.add(_.throttle(() ->
+            setTimeout(() ->
+              neighbor.onElectricity?.dispatch() for neighbor in tile.neighbors
+            , 0)
+          , 100, trailing: false))
+          tile.onElectricity.add(() ->
+            wire.activate() for wire in tile.wires
+          )
+          tile.neighbors = [] # neighboring tiles that either have wires or are walkable
+          tile.wires = [] # wires on this tile
           for offset in neighbors
             neighborTile = @map.getTile(tile.x + offset.x, tile.y + offset.y)
             if (not neighborTile.collides) or neighborTile.index is WIRE_TILE
+              tile.neighbors.push(neighborTile)
               halfwire = @game.add.image(tile.worldX + 16, tile.worldY + 16, 'halfwire')
               halfwire.anchor.set(0.5, 0.5)
               halfwire.angle = Math.atan2(offset.y, offset.x) * 180 / Math.PI
+              halfwire.alpha = 0.1
+              halfwire.activate = () ->
+                @alpha = 1
+                @game.add.tween(@).to({alpha: 0.1}, 300, Phaser.Easing.Cubic.In).start()
+
+
               @wires.add(halfwire)
+              tile.wires.push(halfwire)
       ), this, 0, 0, @map.width, @map.height, 'Tile Layer 1')
 
 

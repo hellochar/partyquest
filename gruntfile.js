@@ -16,7 +16,7 @@ module.exports = function(grunt) {
             },
             slave : {
                 NODE_ENV: 'slave',
-                MASTER_URL: 'party-quest.com/game',
+                MASTER_URL: 'party-quest.com/slave',
                 PORT: 80,
             },
         },
