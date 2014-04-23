@@ -1,6 +1,6 @@
 {
   "name": "partyquest",
-  "version": "0.0.1-17",
+  "version": "0.0.1-18",
   "main": "app.js",
   "private": true,
   "scripts": {
@@ -19,6 +19,7 @@
     "connect-livereload": "~0.3.2",
     "socket.io": "~0.9.16",
     "underscore": "~1.6.0",
+    "cors": "~2.2.0",
     "connect-coffee-script": "~0.1.6"
   },
   "subdomain": "hellochar-partyquest",
@@ -30,7 +31,6 @@
     "node": "0.10.x"
   },
   "devDependencies": {
-    "cors": "~2.2.0",
     "socket.io-client": "~0.9.16"
   }
 }
