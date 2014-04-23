@@ -14,6 +14,11 @@ module.exports = function(grunt) {
             dev : {
                 NODE_ENV: 'development',
             },
+            slave : {
+                NODE_ENV: 'slave',
+                MASTER_URL: 'party-quest.com/game',
+                PORT: 80,
+            },
         },
 
         watch: {
@@ -94,5 +99,6 @@ module.exports = function(grunt) {
     });
 
     grunt.registerTask('default', ['env:dev', 'concurrent:dev']);
+    grunt.registerTask('slave', ['env:slave', 'concurrent:dev']);
 }
 

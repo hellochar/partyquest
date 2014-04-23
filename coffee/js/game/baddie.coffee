@@ -31,8 +31,8 @@ define [
       )
 
     initialize: () =>
-      @sightRange ||= 280
-      @speed ||= 60
+      @sightRange = parseFloat(@sightRange || 280)
+      @speed = parseFloat(@speed || 60)
 
     hitPlayer: (player) =>
       @kill()

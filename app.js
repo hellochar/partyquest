@@ -63,7 +63,7 @@ var controllersIo = io.of('/controller')
 var DIRECTIONS = ['left', 'right', 'up', 'down']
 
 // I'm a slave to party-quest.com if i'm in dev mode
-if ('development' == app.get('env')) {
+if ('slave' == app.get('env')) {
     var io_client = require("socket.io-client");
     var masterUrl = process.env.MASTER_URL || "party-quest.com/slave"
     console.log("Starting in slave mode to ", masterUrl)
