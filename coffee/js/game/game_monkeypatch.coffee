@@ -6,8 +6,12 @@ define [
   Phaser.Group::findInRectangle = (name) ->
     rect = this.game.level.rectangles[name]
 
-    matched = this.children.filter((sprite) -> sprite.getBounds().intersects(rect))
-    matched
+    if rect
+      matched = this.children.filter((sprite) -> sprite.getBounds().intersects(rect))
+      matched
+    else
+      console.warn("no rectangle with name #{name}")
+      []
 
   Phaser.Sprite::getBounds = (name) ->
     new Phaser.Rectangle(@x, @y, @width, @height)

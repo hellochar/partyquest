@@ -16,6 +16,9 @@ require [
   deathText = null
   numPlayersText = null
   timeText = null
+  playText = null
+
+  huds = []
 
   createHud = () ->
     style = {font: "20pt Arial", fill: "white", align: "left" }
@@ -53,6 +56,19 @@ require [
 
       timeText.setText( formattime((Date.now() - game.level.timeStarted) / 1000 | 0) )
 
+    playText = game.add.text(0, 0, "visit party-quest.com to play!", _.extend(style, align: "center"))
+    playText.fixedToCamera = true
+    playText.cameraOffset.setTo((game.width - playText.width)/2, game.height - 40)
+
+    # game.add.tween(playText)
+    #   .to({alpha: 1}, 4000, Phaser.Easing.Linear.None)
+    #   .to({alpha: 0}, 1000, Phaser.Easing.Linear.None)
+    #   .to({alpha: 0}, 25000, Phaser.Easing.Linear.None)
+    #   .to({alpha: 1}, 1000, Phaser.Easing.Linear.None)
+    #   .loop().start()
+
+    huds = [deathText, numPlayersText, timeText, playText]
+
   socket = io.connect('/game')
 
   updateNumPlayers = (num) ->
@@ -71,9 +87,7 @@ require [
       if player
         player.reset()
 
-      game.world.add(deathText)
-      game.world.add(numPlayersText)
-      game.world.add(timeText)
+      game.world.add(text) for text in huds
 
 
   broadphaseFilter = (body1, body2) ->
