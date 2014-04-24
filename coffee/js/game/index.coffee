@@ -11,6 +11,7 @@ require [
   'game/game_monkeypatch'
 ], ($, _, io, Phaser, Overlay, Level, Spike, Baddie, Player) ->
 
+  numPlayers = 0
   level = undefined
   player = undefined
   deathText = null
@@ -72,6 +73,7 @@ require [
   socket = io.connect('/game')
 
   updateNumPlayers = (num) ->
+    numPlayers = num
     numPlayersText.setText("Players: #{num}")
 
 
@@ -118,14 +120,45 @@ require [
   hitExit = () ->
     if not level.finished
       level.finished = true
-      game.sound.play('crowd_applause')
-      game.sound.play('Pickup_Coin')
-      currentLevel = level.num
-      Overlay.text("Level #{currentLevel + 1}")
-      setTimeout(() ->
-        loadLevel(currentLevel + 1)
-      , 1000)
+      nextLevel = level.num + 1
+      if game.cache.getTilemapData("level#{nextLevel}") is undefined
+        doWin()
+      else
+        game.sound.play('crowd_applause')
+        game.sound.play('Pickup_Coin')
+        Overlay.text("Level #{nextLevel}")
+        setTimeout(() ->
+          loadLevel(nextLevel)
+        , 1000)
 
+  doWin = () ->
+    sound = game.sound.play('final_fantasy', 0.4)
+    Overlay.text("""
+    <br><br><br><br><br>
+    Congratulations!
+    <br><br><br><br><br>
+    You and #{numPlayers - 1} others have successfully navigated through the treacherous depths of partyquest!
+    <br><br><br><br><br>
+    By Xiaohan Zhang
+    <br><br><br><br><br>
+    Art from phaser.io, Pixel Prospector, Meena Vempathy, and gamedev.net
+    <br><br><br><br><br>
+    Ending song - Final Fantasy VII - Victory Fanfare (don't sue me!)
+    <br><br><br><br><br>
+    Hope you enjoyed :)
+    <br> Game will reset in <span class='resetGame'>80</span> seconds.
+      <br><br><br><br>
+    """, 0)
+    timeLeft = 52
+    interval = setInterval((() ->
+      timeLeft -= 1
+      $(".resetGame").text(timeLeft)
+      if timeLeft is 0
+        sound.stop()
+        loadLevel(1)
+        Overlay.hide()
+        clearInterval(interval)
+    ), 1000)
 
   preload = ->
     game.load.onFileComplete.add((percent, title, completed, numComplete, total) ->
@@ -147,6 +180,8 @@ require [
     game.load.spritesheet('fence', 'images/fence.png', 32, 32)
     game.load.image('explosion_residue', 'images/explosion_residue.png')
 
+    game.load.audio('applause_long', 'audio/applause_long.mp3')
+    game.load.audio('final_fantasy', 'audio/final_fantasy.mp3')
     game.load.audio('pickup-coin', 'audio/Pickup_Coin.wav')
     game.load.audio('pig_grunt', 'audio/pig_grunt.mp3')
     game.load.audio('pig_squeal', 'audio/pig_squeal.mp3')

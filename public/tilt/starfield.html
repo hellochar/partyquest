@@ -1,0 +1,176 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>starfield</title>
+		<script src="https://code.jquery.com/jquery-latest.pack.js" type="text/javascript"></script>
+		<script src="http://box2dweb.googlecode.com/svn/trunk/Box2d.min.js" type="text/javascript"></script>
+		<script src="http://static.tumblr.com/b1vm5jk/SMln28iad/gyro.min.js" type="text/javascript"></script>
+		<script type="text/javascript">
+            var b2Vec2 = Box2D.Common.Math.b2Vec2,
+                b2BodyDef = Box2D.Dynamics.b2BodyDef,
+                b2Body = Box2D.Dynamics.b2Body,
+                b2FixtureDef = Box2D.Dynamics.b2FixtureDef,
+                b2Fixture = Box2D.Dynamics.b2Fixture,
+                b2World = Box2D.Dynamics.b2World,
+                b2MassData = Box2D.Collision.Shapes.b2MassData,
+                b2CircleShape = Box2D.Collision.Shapes.b2CircleShape,
+                b2DebugDraw = Box2D.Dynamics.b2DebugDraw;
+        	var canvasElement;
+        	var context;
+        	var canvasWidth;
+        	var canvasHeight;
+        	var world;
+        	var deletionBuffer = 10;
+			var colors = ["rgba(9, 23, 97, 0.5)", "rgba(37, 92, 69, 0.5)", "rgba(127, 150, 72, 0.5)", "rgba(201, 190, 73, 0.5)", "rgba(227, 151, 41, 0.5)"];
+			var first = true;
+			var score = 0;
+        	
+        	function init() {
+        	    // Remove start button and display loading message
+        	    $("#start").remove();
+				$("#lost").css("visibility", "hidden");
+				$("#canvas").css("visibility", "visible");
+        	    
+        	   	// Define the canvas
+            	canvasElement = $("#canvas")[0];
+            	context = canvasElement.getContext("2d");
+            	canvasWidth = canvasElement.width - 0;
+            	canvasHeight = canvasElement.height - 0;
+            
+            	// Define the world
+            	var gravity = new b2Vec2(0, 0);
+            	var doSleep = true;
+            	world = new b2World(gravity, doSleep);
+        		
+        		// Respond to gyro and accelerometer
+                gyro.startTracking(function(o) {
+                    // o.x, o.y, o.z for accelerometer
+                    // o.alpha, o.beta, o.gamma for gyro
+        	        world.SetGravity(new b2Vec2(o.gamma*100, o.beta*100));
+					if(first && (o.beta != null)) {// || o.gamma != null)) {
+						// Remove loading message
+						$("#loading").css("visibility", "hidden");
+						// The refresh rate of the display
+						z = window.setInterval(update, (1000 / 60));
+						first = false;
+					}
+                });
+				
+				score = 0;
+        	}
+        	
+        	function addCircle(radius, x, y) {
+            	var body = new b2BodyDef;
+                body.position.x = x;
+        	    body.position.y = y;
+	    	    body.type = b2Body.b2_dynamicBody;
+				body.gravityScale = 0;
+		        var fixture = new b2FixtureDef;
+                fixture.shape = new b2CircleShape(radius);
+        		fixture.density = 0.5;
+        		fixture.friction = 0.1;
+        		fixture.restitution = 0.1;
+				fixture.filter.groupIndex = -Math.floor(Math.random()*2);
+		        world.CreateBody(body).CreateFixture(fixture);
+        	}
+			
+        	function update() {
+				if($("#lost").css("visibility") != "visible") {
+					world.Step(1 / 60, 10, 10);
+					context.clearRect(0, 0, canvasWidth, canvasHeight);
+					world.ClearForces();
+					if(Math.random() < 0.1) {
+						var point = trianglePoint();
+						addCircle(10, point[0], point[1]);
+					}
+					context.drawImage(document.getElementById("ship"), canvasWidth/2, canvasHeight/2);
+					var node = world.GetBodyList();
+					while (node) {
+						var b = node;
+						node = node.GetNext();
+						// Destroy objects that have floated off the screen
+						var position = b.GetPosition();
+						if (position.x < -deletionBuffer || position.x > (canvasWidth + deletionBuffer)) {
+							world.DestroyBody(b);
+							continue;
+						}
+						var fixtures = b.GetFixtureList();
+						if(fixtures != null) {
+							var shape = fixtures.GetShape();
+							context.drawImage(document.getElementById("star"), position.x, position.y);
+						}
+						var target = 50;
+						if((position.x > canvasWidth/2 - target && position.x < canvasWidth/2 + target) && (position.y > canvasHeight/2 - target && position.y < canvasHeight/2 + target)) {
+							$("#lost").css("visibility", "visible");
+							$("#score").html(score);
+							$("#canvas").css("visibility", "hidden");
+						}
+					}
+					score++;
+				}
+        	}
+			
+			function trianglePoint() {
+				var angle = Math.floor(Math.random()*6)*(Math.PI/3);
+				var distance = (Math.random()*canvasHeight*20)/20 + 50;
+				var x = distance*Math.cos(angle);
+				var y = distance*Math.sin(angle);
+				return [x, y];
+			}
+			
+        	if(!window.DeviceOrientationEvent) {
+                document.getElementById("start").innerHTML = "device not supported"
+            }
+        </script>
+		<style type="text/css">
+			body {
+				background-color: black;
+				margin: 0px;
+			}
+			#canvas {
+				//border: 3px solid white;
+				width: 100%;
+				height: auto;
+				margin: auto;
+			}
+			.help {
+				color: white;
+				margin: auto;
+				position: absolute;
+				top: 0; left: 0; bottom: 0; right: 0;
+				display: block;
+				font-family: sans-serif;
+				font-size: 2em;
+				//width: 100px;
+				height: 200px;
+				text-align: center;
+				background-color: black;
+				z-index: 1;
+			}
+			#lost {
+				visibility: hidden;
+			}
+			.asset {
+				display: none;
+			}
+		</style>
+	</head>
+	<body>
+		<a id="loading" class="help">
+			<h1>loading</h1>
+			<p>avoid objects</p>
+		</a>
+		<a id="start" class="help" onclick="init()">
+			<h1>start</h1>
+			<p>please lock the orientation on your device</p>
+		</a>
+		<img id="star" class="asset" src="http://dl.dropboxusercontent.com/u/74882739/images/starfield_star.png">
+		<img id="ship" class="asset" src="http://dl.dropboxusercontent.com/u/74882739/images/starfield_ship.png">
+		<canvas id="canvas" width="720" height="960"></canvas>
+		<a id="lost" class="help" onclick="init()">
+			<h1>over</h1>
+			<p id="score"></p>
+		</a>
+	</body>
+</html>

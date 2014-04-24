@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>tilt</title>
+		<script src="https://code.jquery.com/jquery-latest.pack.js" type="text/javascript"></script>
+		<script src="http://static.tumblr.com/b1vm5jk/SMln28iad/gyro.min.js" type="text/javascript"></script>
+		<script type="text/javascript">
+			gyro.startTracking(function(o) {
+				// o.x, o.y, o.z for accelerometer
+				// o.alpha, o.beta, o.gamma for gyro
+				world.SetGravity(new b2Vec2(o.gamma*gravityFactor, -o.beta*gravityFactor));
+				if(first && (o.beta != null)) {// || o.gamma != null)) {
+					// Remove loading message
+					$("#loading").remove();
+					// The refresh rate of the display
+					z = window.setInterval(update, (1000 / 60));
+					first = false;
+				}
+			});
+        	if(!window.DeviceOrientationEvent) {
+                document.getElementById("links").innerHTML = "device not supported"
+            }
+        </script>
+		<style type="text/css">
+			body {
+				background-color: black;
+				margin: 0px;
+			}
+			#canvas {
+				//border: 3px solid white;
+				width: 100%;
+				height: auto;
+				margin: auto;
+			}
+			.help {
+				color: white;
+				margin: auto;
+				position: absolute;
+				top: 0; left: 0; bottom: 0; right: 0;
+				display: block;
+				font-family: sans-serif;
+				font-size: 2em;
+				//width: 100px;
+				height: 200px;
+				text-align: center;
+				background-color: black;
+				z-index: 1;
+			}
+			a {
+                color: inherit;
+                //text-decoration: inherit;
+            }
+		</style>
+	</head>
+	<body>
+		<div id="links" class="help"> <h1>
+			<a href="../tiltingthings">tiltingthings</a><br/><br/>
+			<a href="../pleasance">pleasance</a><br/><br/>
+			<a href="../starfield">starfield</a>
+		</h1> </div>
+	</body>
+</html>

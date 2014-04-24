@@ -1,0 +1,108 @@
+<p>pleasance</p>
+<script src="https://code.jquery.com/jquery-latest.pack.js" type="text/javascript"></script>
+<script src="https://raw.githack.com/padolsey/jquery.fn/master/cross-domain-ajax/jquery.xdomainajax.js" type="text/javascript"></script>
+<script src="http://static.tumblr.com/b1vm5jk/SMln28iad/gyro.min.js" type="text/javascript"></script>
+<script type="text/javascript">// <![CDATA[
+// pleasant tags
+			var tags = ["pastel", "octopus", "cat", "glitter", "flowers", "cake", "cupcake", "macaron", "bokeh", "nebula", "bows", "cumberbatch", "squirrel", "puppy", "bunny", "cuttlefish", "lace", "cozy", "candy", "sugar", "chocolate", "butterfly", "moth", "wings", "hummingbird", "feathers", "grass", "croissant"];
+			var tagL;
+			var tagR;
+			var image;
+			
+			// display the gamma
+			var left_selected = false;
+			var right_selected = false;
+			var hold = 0;
+			var max_hold = 2;
+			var max_gamma = 15;
+				
+			function setImage() {
+				$("#picture").attr("src", "");
+				do {
+					tagL = tags[Math.floor(Math.random()*(tags.length))];
+					tagR = tags[Math.floor(Math.random()*(tags.length))];
+				} while(tagL == tagR);
+				console.log(tagL + " + " + tagR);
+				$.ajax({
+					url: "http://api.tumblr.com/v2/tagged?tag=" + tagL + "+" + tagR + "&api_key=ZisxmQjE3D2RcQRzlDObvKq6zKIzfyRwLOmMVKXhAspV4w20Fx",
+					dataType: 'jsonp',
+					success: function(data){
+						try {
+							image = data.response[Math.floor(Math.random()*(data.response.length))].photos[0].alt_sizes[0].url;
+							$("#left").html(tagL);
+							$("#right").html(tagR);
+							$("#picture").attr("src", image);
+						} catch (e) {
+							setImage();
+						}
+					}
+				});
+			}
+			
+			function helpless() {
+        	    $(".help").remove();
+				gyro.startTracking(function(o) {
+					// o.x, o.y, o.z for accelerometer
+					// o.alpha, o.beta, o.gamma for gyro
+					if(o.beta < -max_gamma) {
+						hold++;
+						$("#left").css("opacity", (hold + 1)/(max_hold + 1));
+						if(hold > max_hold) {
+							hold = 0;
+							tags.push(tagL);
+							left_selected = true;
+							setImage();
+						}
+					} else if(o.beta > max_gamma) {
+						hold++;
+						$("#right").css("opacity", (hold + 1)/(max_hold + 1));
+						if(hold > max_hold) {
+							hold = 0;
+							tags.push(tagR);
+							right_selected = true;
+							setImage();
+						}
+					} else {
+						hold = 0;
+						$("#left").css("opacity", (hold + 1)/(max_hold + 1));
+						$("#right").css("opacity", (hold + 1)/(max_hold + 1));
+					}
+				});
+			}
+// ]]></script>
+		<style type="text/css">
+			body {
+				background-color: black;
+				margin: 0px;
+			}
+			#canvas {
+				//border: 3px solid white;
+				width: 100%;
+				height: auto;
+				margin: auto;
+			}
+			.help {
+				color: white;
+				margin: auto;
+				position: absolute;
+				top: 0; left: 0; bottom: 0; right: 0;
+				display: block;
+				font-family: sans-serif;
+				font-size: 2em;
+				//width: 100px;
+				height: 200px;
+				text-align: center;
+				background-color: black;
+				z-index: 1;
+			}
+			#lost {
+				visibility: hidden;
+			}
+			.asset {
+				display: none;
+			}
+		</style>
+<p><a class="tag" id="left"></a>left <a class="tag" id="right"></a>right <img id="picture" /></p>
+<div class="help">
+<h2>sorry, you must use your mobile data plan to view pleasance</h2>
+</div>
