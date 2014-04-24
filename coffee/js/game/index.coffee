@@ -33,7 +33,7 @@ require [
     numPlayersText.cameraOffset.setTo(0, 24)
     updateNumPlayers("???")
 
-    timeText = game.add.text(0, 0, "", _.extend(style, align: "center"))
+    timeText = game.add.text(0, 0, "", _.extend(_.clone(style, align: "center")))
     timeText.fixedToCamera = true
     timeText.cameraOffset.setTo(game.width / 2, 0)
     timeText.update = () ->
@@ -56,7 +56,7 @@ require [
 
       timeText.setText( formattime((Date.now() - game.level.timeStarted) / 1000 | 0) )
 
-    playText = game.add.text(0, 0, "visit party-quest.com to play!", _.extend(style, align: "center"))
+    playText = game.add.text(0, 0, "visit party-quest.com to play!", _.extend(_.clone(style), {fill: "yellow", align: "center"}))
     playText.fixedToCamera = true
     playText.cameraOffset.setTo((game.width - playText.width)/2, game.height - 40)
 

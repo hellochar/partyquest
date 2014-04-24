@@ -45,11 +45,13 @@ define [
     refence: (rectName, type = 'fences') =>
       obj.revive() for obj in this[type].findInRectangle(rectName)
 
+    callAll: (rectName, methodName, type = 'fences') =>
+      obj[methodName]() for obj in this[type].findInRectangle(rectName)
 
-    createObject: (name, x, y) =>
-      require("game/#{name}", (ObjectClass) =>
-        object = new ObjectClass(@game, x, y, name, ) ->
-      )
+    # createObject: (name, x, y) =>
+    #   require("game/#{name}", (ObjectClass) =>
+    #     object = new ObjectClass(@game, x, y, name, ) ->
+    #   )
 
     create: () =>
 
@@ -87,7 +89,7 @@ define [
                 eval(evalStr)
               else
                 neighbor.onElectricity.dispatch(evalStr, tile) for neighbor in _.without(tile.neighbors, from)
-            , 0)
+            , 20)
           , 100, trailing: false))
           tile.neighbors = [] # neighboring tiles that have wires
           tile.wires = [] # wires on this tile
@@ -155,6 +157,15 @@ define [
       @exit.y -= @exit.height
       @game.physics.p2.enable(@exit)
       @exit.body.motionState = 2
+
+      if @map.collision.Text
+        for textRect in @map.collision.Text
+          props = textRect.properties
+          if props.text
+            fontSize = props.fontSize || 20
+            style = {font: "#{fontSize}pt Arial", fill: "white", align: "left" }
+            p = @game.add.text(textRect.x, textRect.y, props.text, style)
+
 
       @game.world.sendToBack(@platforms)
 
