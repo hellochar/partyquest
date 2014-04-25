@@ -18,7 +18,7 @@ define [
       @game.load.tilemap('level2', 'maps/lvl2.json', null, Phaser.Tilemap.TILED_JSON)
       @game.load.tilemap('level3', 'maps/lvl3.json', null, Phaser.Tilemap.TILED_JSON)
       @game.load.tilemap('level4', 'maps/lvl4.json', null, Phaser.Tilemap.TILED_JSON)
-      @game.load.tilemap('level5', 'maps/lvl5.json', null, Phaser.Tilemap.TILED_JSON)
+      # @game.load.tilemap('level5', 'maps/lvl5.json', null, Phaser.Tilemap.TILED_JSON)
       @game.load.image('tilesheet', 'images/tilesheet.png')
       @game.load.image('spike', 'images/spike.png')
       @game.load.image('box', 'images/box.png')
