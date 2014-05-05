@@ -35,16 +35,16 @@ define [
       # *getting* the velocity gives it to you in meters (aka game.world.mpx()), but you should *set* in pixel coordinates
       new Phaser.Point(@body.velocity.world.mpxi(@body.velocity.x), @body.velocity.world.mpxi(@body.velocity.y))
 
-    getFriction: (tile) =>
+    getFrictionMagnitude: (tile) =>
       if tile.isIce() then 3 else 100
 
     preUpdate: () =>
       super()
 
-      FRICTION_OFFSET = @getFriction(@tileUnderneathMe())
+      frictionScalar = @getFrictionMagnitude(@tileUnderneathMe())
 
       vel = @getPixelVelocity()
-      dVel = vel.clone().setMagnitude(-Math.min(FRICTION_OFFSET, vel.getMagnitude()))
+      dVel = vel.clone().setMagnitude(-Math.min(frictionScalar, vel.getMagnitude()))
       @body.velocity.x = vel.x + dVel.x
       @body.velocity.y = vel.y + dVel.y
 
