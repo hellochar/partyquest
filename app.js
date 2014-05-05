@@ -46,6 +46,21 @@ app.use(express.static(path.join(__dirname, 'compiled')));
 app.use('/js/vendor', express.static(path.join(__dirname, 'bower_components')));
 
 app.get('/', routes.index);
+app.get('/tilt', function(req, res) {
+    res.sendfile(path.join(__dirname, 'public', 'tilt', 'tilt.html'))
+});
+
+app.get('/tiltingthings', function(req, res) {
+    res.sendfile(path.join(__dirname, 'public', 'tilt', 'tiltingthings.html'))
+});
+
+app.get('/pleasance', function(req, res) {
+    res.sendfile(path.join(__dirname, 'public', 'tilt', 'pleasance.html'))
+});
+
+app.get('/starfield', function(req, res) {
+    res.sendfile(path.join(__dirname, 'public', 'tilt', 'starfield.html'))
+});
 
 var server = http.createServer(app);
 var io = require("socket.io").listen(server)
