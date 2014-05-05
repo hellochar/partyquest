@@ -92,31 +92,6 @@ require [
       game.world.add(text) for text in huds
 
 
-  broadphaseFilter = (body1, body2) ->
-    [hasPlayer, sprite] =
-      if body1?.sprite?.player
-        [true, body2?.sprite]
-      else if body2.sprite?.player
-        [true, body1?.sprite]
-      else
-        [false, null]
-
-    if hasPlayer
-      if sprite instanceof Spike
-        player.hitSpike(sprite)
-        return false
-      if sprite instanceof Baddie
-        player.hitBaddie(sprite)
-        sprite.hitPlayer(player)
-        return false
-      if sprite is game.level.exit
-        hitExit()
-        return false
-      else
-        return true
-    else
-      return true
-
   hitExit = () ->
     if not level.finished
       level.finished = true
@@ -199,19 +174,14 @@ require [
     game.stage.disableVisibilityChange = true
     game.paused = false
 
-    # press 1-9 to quickly go to level 1-9
-    for i in [1..9]
+    # press numkeys to quickly go to level
+    for i in [1..5]
       ((i) ->
         key = game.input.keyboard.addKey(48 + i) # 48 == keyCode for 0, 49 == keyCode for 1, etc.
         key.onDown.add(() -> 
           loadLevel(i)
         )
       )(i)
-
-    game.physics.startSystem(Phaser.Physics.P2JS)
-    game.physics.p2.setImpactEvents(true)
-    game.physics.p2.defaultRestitution = 5.0
-    game.physics.p2.setPostBroadphaseCallback(broadphaseFilter, this)
 
     createHud()
 
@@ -236,6 +206,7 @@ require [
     update: update
   )
   game.socket = socket
+  game.hitExit = hitExit
 
   window.game = game
 

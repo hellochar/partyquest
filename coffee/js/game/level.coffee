@@ -24,6 +24,7 @@ define [
       @game.load.image('box', 'images/box.png')
       @game.load.image('exit', 'images/exit.png')
       @game.load.image('halfwire', 'images/halfwire.png')
+      @game.load.image('clear', 'images/clear.png')
 
     destroy: () ->
       @game.physics.p2.clearTilemapLayerBodies(@map, @platforms)
@@ -39,6 +40,7 @@ define [
       @rectangles = null
 
       @game.world.removeAll(true)
+      @game.physics.p2.clear()
 
     unfence: (rectName, type = 'fences') =>
       obj.kill() for obj in this[type].findInRectangle(rectName)
@@ -49,12 +51,41 @@ define [
     callAll: (rectName, methodName, type = 'fences') =>
       obj[methodName]() for obj in this[type].findInRectangle(rectName)
 
-    # createObject: (name, x, y) =>
-    #   require("game/#{name}", (ObjectClass) =>
-    #     object = new ObjectClass(@game, x, y, name, ) ->
-    #   )
+    broadphaseFilter: (body1, body2) =>
+      player = @game.player
+      [hasPlayer, sprite] =
+        if body1?.sprite?.player
+          [true, body2?.sprite]
+        else if body2.sprite?.player
+          [true, body1?.sprite]
+        else
+          [false, null]
+
+      if hasPlayer
+        # game.debug.spriteBounds(sprite)
+        if sprite instanceof Spike
+          player.hitSpike(sprite)
+          return false
+        if sprite instanceof Baddie
+          player.hitBaddie(sprite)
+          sprite.hitPlayer(player)
+          return false
+        if sprite is game.level.exit
+          @game.hitExit()
+          return false
+        if sprite?.tile?.index is 27 # magic number for glass tile
+          return false
+        else
+          return true
+      else
+        return true
+
 
     create: () =>
+      @game.physics.startSystem(Phaser.Physics.P2JS)
+      @game.physics.p2.setImpactEvents(true)
+      @game.physics.p2.defaultRestitution = 5.0
+      @game.physics.p2.setPostBroadphaseCallback(@broadphaseFilter, this)
 
       @timeStarted = Date.now()
 
@@ -111,6 +142,17 @@ define [
               @wires.add(halfwire)
               tile.wires.push(halfwire)
       ), this, 0, 0, @map.width, @map.height, 'Tile Layer 1')
+
+      GLASS_TILE = 27
+      @map.forEach((tile) ->
+        if tile.index is GLASS_TILE
+          sprite = @game.add.sprite(tile.worldX + 16, tile.worldY + 16, 'clear')
+          @game.physics.p2.enable(sprite)
+          sprite.body.fixedRotation = true
+          sprite.body.motionState = Phaser.Physics.P2.Body.STATIC
+          sprite.body.mass = 0
+          sprite.tile = tile
+      )
 
 
       @rectangles = {}
